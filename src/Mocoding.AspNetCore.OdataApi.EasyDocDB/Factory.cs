@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using Mocoding.AspNetCore.OdataApi.DataAccess;
 using Mocoding.AspNetCore.OdataApi.EasyDocDB.Helpers;
 using Mocoding.EasyDocDb;

@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace Mocoding.AspNetCore.OdataApi.EasyDocDB
+﻿namespace Mocoding.AspNetCore.OdataApi.EasyDocDB
 {
     public static class Extensions
     {

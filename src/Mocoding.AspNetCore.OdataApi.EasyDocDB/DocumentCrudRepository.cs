@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Mocoding.AspNetCore.OdataApi.DataAccess;
 using Mocoding.EasyDocDb;
@@ -19,13 +18,6 @@ namespace Mocoding.AspNetCore.OdataApi.EasyDocDB
         }
 
         protected IDocument<List<TData>> Collection { get; }
-
-        public async Task ReInitRepository(List<TData> list)
-        {
-            Collection.Data.RemoveAll(_ => _.Id != null);
-            Collection.Data.AddRange(list);
-            await Collection.Save();
-        }
 
         public IQueryable<TData> GetAll()
         {

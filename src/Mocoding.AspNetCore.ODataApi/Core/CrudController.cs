@@ -30,8 +30,6 @@ namespace Mocoding.AspNetCore.OdataApi.Core
         }
 
         [HttpPost]
-
-        // [ModelStateValidationActionFilter]
         public virtual async Task<TEntity> Create([FromBody]TEntity entity)
         {
             if (entity.Id == Guid.Empty)
@@ -52,8 +50,6 @@ namespace Mocoding.AspNetCore.OdataApi.Core
         }
 
         [HttpPut("{id}")]
-
-        // [ModelStateValidationActionFilter]
         public virtual async Task<TEntity> Update(Guid id, [FromBody]TEntity entity)
         {
             entity.Id = id;
