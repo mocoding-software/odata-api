@@ -16,7 +16,7 @@ namespace Mocoding.AspNetCore.ODataApi
         {
             var services = mvc.Services;
             var modelBuilder = new ODataApiBuilder(services);
-
+            services.AddOData();
             services.AddSingleton(modelBuilder);
             mvc.AddMvcOptions(options => options.Conventions.Add(new CrudControllerNameConvention(modelBuilder)))
                 .ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new CrudControllerFeatureProvider(modelBuilder)));
