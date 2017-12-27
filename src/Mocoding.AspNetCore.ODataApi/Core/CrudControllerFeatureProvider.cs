@@ -4,7 +4,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
-namespace Mocoding.AspNetCore.OdataApi.Core
+namespace Mocoding.AspNetCore.ODataApi.Core
 {
     internal class CrudControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Mocoding.AspNetCore.OdataApi.DataAccess;
+using Mocoding.AspNetCore.ODataApi.DataAccess;
 
-namespace Mocoding.AspNetCore.OdataApi
+namespace Mocoding.AspNetCore.ODataApi
 {
     public interface IODataApiBuilder
     {

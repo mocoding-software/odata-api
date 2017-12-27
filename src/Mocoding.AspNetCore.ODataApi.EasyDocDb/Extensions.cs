@@ -1,4 +1,4 @@
-﻿namespace Mocoding.AspNetCore.OdataApi.EasyDocDB
+﻿namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 {
     public static class Extensions
     {

@@ -1,6 +1,6 @@
 ﻿using System;
-using Mocoding.AspNetCore.OdataApi.DataAccess;
-using Mocoding.AspNetCore.OdataApi.EasyDocDB.Helpers;
+using Mocoding.AspNetCore.ODataApi.DataAccess;
+using Mocoding.AspNetCore.ODataApi.EasyDocDb.Helpers;
 
 namespace WebApp
 {

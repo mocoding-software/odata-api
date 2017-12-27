@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Mocoding.AspNetCore.OdataApi.DataAccess;
+using Mocoding.AspNetCore.ODataApi.DataAccess;
 
-namespace Mocoding.AspNetCore.OdataApi.Core
+namespace Mocoding.AspNetCore.ODataApi.Core
 {
     public class ODataApiBuilder : IODataApiBuilder
     {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
-using Mocoding.AspNetCore.OdataApi.DataAccess;
+using Mocoding.AspNetCore.ODataApi.DataAccess;
 
-namespace Mocoding.AspNetCore.OdataApi.Core
+namespace Mocoding.AspNetCore.ODataApi.Core
 {
     [Route("[controller]")]
     internal class CrudController<TEntity>

@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using Mocoding.AspNetCore.OdataApi.Core;
+using Mocoding.AspNetCore.ODataApi.Core;
 
-namespace Mocoding.AspNetCore.OdataApi
+namespace Mocoding.AspNetCore.ODataApi
 {
     public static class ODataApiExtensions
     {

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Mocoding.AspNetCore.OdataApi.DataAccess;
-using Mocoding.AspNetCore.OdataApi.EasyDocDB.Helpers;
+using Mocoding.AspNetCore.ODataApi.DataAccess;
+using Mocoding.AspNetCore.ODataApi.EasyDocDb.Helpers;
 using Mocoding.EasyDocDb;
 using Mocoding.EasyDocDb.FileSystem;
 using Mocoding.EasyDocDb.Json;
 
-namespace Mocoding.AspNetCore.OdataApi.EasyDocDB
+namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 {
     public class Factory : IRepositoryFactory
     {

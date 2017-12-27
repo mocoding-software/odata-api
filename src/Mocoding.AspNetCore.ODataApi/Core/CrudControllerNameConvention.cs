@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
-namespace Mocoding.AspNetCore.OdataApi.Core
+namespace Mocoding.AspNetCore.ODataApi.Core
 {
     // Used to set the controller name for routing purposes. Without this convention the
     // names would be like 'CrudController`1[Resource]' instead of 'Resource'.

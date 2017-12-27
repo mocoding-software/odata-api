@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mocoding.AspNetCore.OdataApi.DataAccess
+namespace Mocoding.AspNetCore.ODataApi.DataAccess
 {
     public interface ICrudRepository<T>
         where T : class, IEntity, new()

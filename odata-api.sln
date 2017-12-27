@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocoding.AspNetCore.OdataApi", "src\Mocoding.AspNetCore.ODataApi\Mocoding.AspNetCore.OdataApi.csproj", "{B774558F-8838-40DD-8F84-A7A4DADE101C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocoding.AspNetCore.ODataApi", "src\Mocoding.AspNetCore.ODataApi\Mocoding.AspNetCore.ODataApi.csproj", "{B774558F-8838-40DD-8F84-A7A4DADE101C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocoding.AspNetCore.OdataApi.EasyDocDB", "src\Mocoding.AspNetCore.OdataApi.EasyDocDB\Mocoding.AspNetCore.OdataApi.EasyDocDB.csproj", "{52FC4FF4-5CBB-44A7-902F-87DFA5036BEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocoding.AspNetCore.ODataApi.EasyDocDb", "src\Mocoding.AspNetCore.ODataApi.EasyDocDb\Mocoding.AspNetCore.ODataApi.EasyDocDb.csproj", "{52FC4FF4-5CBB-44A7-902F-87DFA5036BEE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "examples\WebApp\WebApp.csproj", "{3ED064C3-11E2-4031-93C2-8921F691C248}"
 EndProject

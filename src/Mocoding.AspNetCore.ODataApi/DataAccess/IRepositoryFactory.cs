@@ -1,4 +1,4 @@
-﻿namespace Mocoding.AspNetCore.OdataApi.DataAccess
+﻿namespace Mocoding.AspNetCore.ODataApi.DataAccess
 {
     public interface IRepositoryFactory
     {

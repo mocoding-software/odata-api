@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <CodeAnalysisRuleSet>..\..\_stylecop\StyleCop.ruleset</CodeAnalysisRuleSet>
+    <AssemblyName>Mocoding.AspNetCore.ODataApi.EasyDocDb</AssemblyName>
+    <RootNamespace>Mocoding.AspNetCore.ODataApi.EasyDocDb</RootNamespace>
   </PropertyGroup>
 
 

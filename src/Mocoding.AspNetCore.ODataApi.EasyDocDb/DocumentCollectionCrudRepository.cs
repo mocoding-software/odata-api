@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Mocoding.AspNetCore.OdataApi.DataAccess;
+using Mocoding.AspNetCore.ODataApi.DataAccess;
 
 using Mocoding.EasyDocDb;
 
-namespace Mocoding.AspNetCore.OdataApi.EasyDocDB
+namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 {
     public class DocumentCollectionCrudRepository<TData> : ICrudRepository<TData>
         where TData : class, IEntity, new()

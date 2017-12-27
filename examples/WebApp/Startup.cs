@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Mocoding.AspNetCore.OdataApi;
-using Mocoding.AspNetCore.OdataApi.EasyDocDB;
+using Mocoding.AspNetCore.ODataApi;
+using Mocoding.AspNetCore.ODataApi.EasyDocDb;
 using Newtonsoft.Json.Serialization;
 
 namespace WebApp
