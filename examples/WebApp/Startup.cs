@@ -1,10 +1,12 @@
 ﻿using System;
+using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mocoding.AspNetCore.ODataApi;
+using Mocoding.AspNetCore.ODataApi.Core;
 using Mocoding.AspNetCore.ODataApi.EasyDocDb;
 using Newtonsoft.Json.Serialization;
 
@@ -25,12 +27,14 @@ namespace WebApp
         {
             services.AddMvc();
             services.AddOData();
-            var mvcBuilder = services
+            services
                 .AddMvcCore()
                 .AddJsonFormatters(settings => settings.ContractResolver = new CamelCasePropertyNamesContractResolver())
-                .AddApiExplorer();
-
-            ConfigureCrudApi(mvcBuilder);
+                .AddApiExplorer()
+                .AddODataApi()
+                    .AddODataApiEasyDocDb()
+                    .AddResource<User>()
+                    .AddResource<Role>("Roles"); // custom Entity Name / Url
 
             services.AddSwaggerSpecification();
         }
@@ -40,19 +44,11 @@ namespace WebApp
             app.Map("/api", apiApp =>
             {
                 apiApp.UseSwaggerUIAndSpec();
-                apiApp.UseMvc(builder =>
-                {
-                    builder.UseOdata(app);
-                });
+                apiApp.UseMvc(builder => builder.UseOData(app));
             });
 
             app.UseStaticFiles();
         }
-
-        private static void ConfigureCrudApi(IMvcCoreBuilder services)
-        {
-            services.AddODataApi().AddOdataApiEasyDocDb()
-                .AddResource<Users>();
-        }
     }
 }
+

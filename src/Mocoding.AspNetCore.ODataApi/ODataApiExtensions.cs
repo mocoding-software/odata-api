@@ -2,10 +2,13 @@
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OData.UriParser;
 using Mocoding.AspNetCore.ODataApi.Core;
 
 namespace Mocoding.AspNetCore.ODataApi
@@ -20,6 +23,7 @@ namespace Mocoding.AspNetCore.ODataApi
             services.AddSingleton(modelBuilder);
             mvc.AddMvcOptions(options => options.Conventions.Add(new CrudControllerNameConvention(modelBuilder)))
                 .ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new CrudControllerFeatureProvider(modelBuilder)));
+
 
             services.AddMvcCore(options =>
                      {
@@ -39,17 +43,12 @@ namespace Mocoding.AspNetCore.ODataApi
             return modelBuilder;
         }
 
-        public static IRouteBuilder UseOdata(this IRouteBuilder routeBuilder, IApplicationBuilder app)
+        public static IRouteBuilder UseOData(this IRouteBuilder routeBuilder, IApplicationBuilder app, string routePrfix = "odata")
         {
-            var builder = new ODataConventionModelBuilder(app.ApplicationServices);
-            var usedTypes = app.ApplicationServices.GetService<ODataApiBuilder>().GetUsedTypes();
-            foreach (var usedType in usedTypes)
-            {
-                builder.AddEntityType(usedType);
-            }
+            var apiBuilder = app.ApplicationServices.GetService<ODataApiBuilder>();
 
-            routeBuilder.Count().Filter().OrderBy().Expand().Select().MaxTop(null);
-            routeBuilder.MapODataServiceRoute($"", null, builder.GetEdmModel());
+            routeBuilder.Filter().Select().Expand().Count().MaxTop(null);
+            routeBuilder.MapODataServiceRoute("OData", routePrfix, apiBuilder.ODataModelBuilder.GetEdmModel());
 
             return routeBuilder;
         }

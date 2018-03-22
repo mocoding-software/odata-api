@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNet.OData.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Mocoding.AspNetCore.ODataApi.DataAccess;
 
@@ -18,7 +19,10 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             _services = services;
             _types = new List<Type>();
             _routes = new Dictionary<Type, string>();
+            ODataModelBuilder = new ODataConventionModelBuilder();
         }
+
+        internal ODataConventionModelBuilder ODataModelBuilder { get; }
 
         public IEnumerable<Type> Types => _types;
 
@@ -28,20 +32,16 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             return this;
         }
 
-        public IEnumerable<Type> GetUsedTypes()
-        {
-            return _types.ToList().AsReadOnly();
-        }
-
         public IODataApiBuilder AddResource<T>(string customRoute = null)
             where T : class, IEntity, new()
         {
             var type = typeof(T);
-            var name = type.Name.ToLower();
+            var route = customRoute ?? type.Name;
             _types.Add(type);
-            _routes.Add(type, customRoute ?? name);
+            _routes.Add(type, route);
 
-            _services.AddSingleton(_factory.Create<T>(name));
+            ODataModelBuilder.EntitySet<T>(route);
+            _services.AddSingleton(_factory.Create<T>(type.Name.ToLower()));
 
             return this;
         }

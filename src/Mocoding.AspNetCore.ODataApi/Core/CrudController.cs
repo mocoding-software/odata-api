@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OData;
 using Mocoding.AspNetCore.ODataApi.DataAccess;
 
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
-    [Route("[controller]")]
-    internal class CrudController<TEntity>
+    internal class CrudController<TEntity> : ODataController
         where TEntity : class, IEntity, new()
     {
         public CrudController(ICrudRepository<TEntity> repository)
@@ -22,45 +22,48 @@ namespace Mocoding.AspNetCore.ODataApi.Core
 
         protected ICrudRepository<TEntity> Repository { get; }
 
-        [HttpGet]
         [EnableQuery]
-        public IEnumerable<TEntity> GetAll()
+        public IQueryable<TEntity> Get()
         {
             return Repository.GetAll();
         }
 
-        [HttpPost]
-        public virtual async Task<TEntity> Create([FromBody]TEntity entity)
+        public virtual TEntity Get([FromODataUri] Guid key)
         {
-            if (entity.Id == Guid.Empty)
-                entity.Id = Guid.NewGuid();
-
-            await Repository.AddOrUpdate(entity);
-            return entity;
-        }
-
-        [HttpGet("{id}")]
-        public virtual TEntity Read(Guid id)
-        {
-            var entity = Repository.GetAll().FirstOrDefault(_ => _.Id == id);
+            var entity = Repository.GetAll().FirstOrDefault(_ => _.Id == key);
             if (entity == null)
                 throw new ArgumentNullException();
 
             return entity;
         }
 
-        [HttpPut("{id}")]
-        public virtual async Task<TEntity> Update(Guid id, [FromBody]TEntity entity)
+        public virtual async Task<TEntity> Post([FromBody]TEntity entity)
         {
-            entity.Id = id;
             await Repository.AddOrUpdate(entity);
             return entity;
         }
 
-        [HttpDelete("{id}")]
-        public virtual async Task Delete(Guid id)
+        public virtual async Task<TEntity> Put(Guid key, [FromBody]TEntity entity)
         {
-            await Repository.Delete(id);
+            entity.Id = key;
+            await Repository.AddOrUpdate(entity);
+            return entity;
+        }
+
+        public virtual async Task<TEntity> Patch(Guid key, [FromBody]Delta<TEntity> moviePatch)
+        {
+            var entity = Repository.GetAll().FirstOrDefault(_ => _.Id == key);
+            if (entity == null)
+                throw new ArgumentNullException();
+
+            moviePatch.CopyChangedValues(entity);
+            await Repository.AddOrUpdate(entity);
+            return entity;
+        }
+
+        public virtual async Task Delete(Guid key)
+        {
+            await Repository.Delete(key);
         }
     }
 }

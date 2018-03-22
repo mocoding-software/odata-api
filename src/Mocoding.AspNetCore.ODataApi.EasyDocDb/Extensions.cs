@@ -2,9 +2,9 @@
 {
     public static class Extensions
     {
-        public static IODataApiBuilder AddOdataApiEasyDocDb(this IODataApiBuilder oDataApiBuilder, string foder = "")
+        public static IODataApiBuilder AddODataApiEasyDocDb(this IODataApiBuilder oDataApiBuilder, string foder = "../data")
         {
-            return oDataApiBuilder.UseFactory(new Factory(foder == string.Empty ? "../data" : "../data" + "/" + foder));
+            return oDataApiBuilder.UseFactory(new Factory(foder));
         }
     }
 }
