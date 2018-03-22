@@ -9,18 +9,18 @@ using Mocoding.EasyDocDb.Json;
 
 namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 {
-    public class Factory : IRepositoryFactory
+    public class DocumentRepositoryFactory : IRepositoryFactory
     {
         private readonly string _conn;
         private readonly IRepository _repository;
 
-        public Factory(string conn)
+        public DocumentRepositoryFactory(string conn)
         {
             _conn = conn;
             _repository = new EmbeddedRepository(new JsonSerializer());
         }
 
-        public Factory(string conn, IDocumentStorage storage)
+        public DocumentRepositoryFactory(string conn, IDocumentStorage storage)
         {
             _conn = conn;
             _repository = new EmbeddedRepository(new JsonSerializer(), storage);
@@ -31,9 +31,9 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
         {
             var t = typeof(T);
             var attribute = t.GetCustomAttribute(typeof(ReadOptimizedAttribute));
-            return attribute != null ?
-                new DocumentCrudRepository<T>(_repository.Init<List<T>>(Path.Combine(_conn, name + ".json")).Result)
-             : new DocumentCollectionCrudRepository<T>(_repository.InitCollection<T>(Path.Combine(_conn, name)).Result) as ICrudRepository<T>;
+            return attribute != null
+                ? new DocumentCrudRepository<T>(_repository.Init<List<T>>(Path.Combine(_conn, name + ".json")).Result)
+                : new DocumentCollectionCrudRepository<T>(_repository.InitCollection<T>(Path.Combine(_conn, name)).Result) as ICrudRepository<T>;
         }
     }
 }
