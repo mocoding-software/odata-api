@@ -20,6 +20,12 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             _repository = new EmbeddedRepository(new JsonSerializer());
         }
 
+        public Factory(string conn, IDocumentStorage storage)
+        {
+            _conn = conn;
+            _repository = new EmbeddedRepository(new JsonSerializer(), storage);
+        }
+
         public ICrudRepository<T> Create<T>(string name)
             where T : class, IEntity, new()
         {

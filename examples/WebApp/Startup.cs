@@ -26,7 +26,6 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddOData();
             services
                 .AddMvcCore()
                 .AddJsonFormatters(settings => settings.ContractResolver = new CamelCasePropertyNamesContractResolver())
