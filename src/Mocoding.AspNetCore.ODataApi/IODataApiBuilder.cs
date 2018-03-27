@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Mocoding.AspNetCore.ODataApi.DataAccess;
+﻿using Mocoding.AspNetCore.ODataApi.DataAccess;
 
 namespace Mocoding.AspNetCore.ODataApi
 {

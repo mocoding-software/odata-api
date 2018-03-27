@@ -1,16 +1,11 @@
 ﻿using System.Linq;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
-using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using Microsoft.OData.UriParser;
 using Mocoding.AspNetCore.ODataApi.Core;
-using Mocoding.AspNetCore.ODataApi.Schema;
 
 namespace Mocoding.AspNetCore.ODataApi
 {

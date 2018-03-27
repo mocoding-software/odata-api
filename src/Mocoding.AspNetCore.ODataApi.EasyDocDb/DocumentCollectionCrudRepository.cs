@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Mocoding.AspNetCore.ODataApi.DataAccess;
-
 using Mocoding.EasyDocDb;
 
 namespace Mocoding.AspNetCore.ODataApi.EasyDocDb

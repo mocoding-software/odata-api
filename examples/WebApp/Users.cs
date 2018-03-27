@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net.Sockets;
-using Microsoft.OData.Edm;
 using Mocoding.AspNetCore.ODataApi.DataAccess;
 using Mocoding.AspNetCore.ODataApi.EasyDocDb.Helpers;
 

@@ -1,12 +1,9 @@
 ﻿using System;
-using Microsoft.AspNet.OData.Builder;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mocoding.AspNetCore.ODataApi;
-using Mocoding.AspNetCore.ODataApi.Core;
 using Mocoding.AspNetCore.ODataApi.EasyDocDb;
 using Newtonsoft.Json.Serialization;
 
