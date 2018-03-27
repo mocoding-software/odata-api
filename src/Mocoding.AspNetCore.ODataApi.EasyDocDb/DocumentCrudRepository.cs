@@ -19,7 +19,7 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 
         protected IDocument<List<TData>> Collection { get; }
 
-        public IQueryable<TData> GetAll()
+        public IQueryable<TData> QueryRecords()
         {
             return Collection.Data.AsQueryable();
         }
@@ -36,6 +36,17 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             return entity;
         }
 
+        public async Task BatchAddOrUpdate(TData[] entities)
+        {
+            lock (_lock)
+            {
+                foreach (var entity in entities)
+                    AddOrUpdateInternal(entity);
+            }
+
+            await Collection.Save();
+        }
+
         public async Task Delete(Guid id)
         {
             var item = Collection.Data.FirstOrDefault(_ => _.Id == id);
@@ -48,9 +59,9 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             await Collection.Save();
         }
 
-        public async Task DeleteAll()
+        public async Task BatchDelete(Predicate<TData> predicate)
         {
-            Collection.Data.Clear();
+            Collection.Data.RemoveAll(predicate);
             await Collection.Save();
         }
 
@@ -60,14 +71,18 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             {
                 var item = Collection.Data.FirstOrDefault(_ => _.Id == entity.Id);
                 var index = Collection.Data.IndexOf(item);
-                Collection.Data.RemoveAt(index);
-                Collection.Data.Insert(index, entity);
+                if (index != -1)
+                {
+                    Collection.Data.RemoveAt(index);
+                    Collection.Data.Insert(index, entity);
+                }
             }
             else
             {
                 entity.Id = Guid.NewGuid();
-                Collection.Data.Add(entity);
             }
+
+            Collection.Data.Add(entity);
         }
     }
 }

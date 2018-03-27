@@ -17,22 +17,33 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 
         protected IDocumentCollection<TData> Collection { get; }
 
-        public IQueryable<TData> GetAll() => Collection.Documents.Select(_ => _.Data).AsQueryable();
+        public IQueryable<TData> QueryRecords() => Collection.Documents.Select(_ => _.Data).AsQueryable();
 
         public async Task<TData> AddOrUpdate(TData entity)
         {
             if (entity.Id.HasValue)
             {
                 var item = GetById(entity.Id.Value);
-                await item.SyncUpdate(entity);
+                if (item != null)
+                {
+                    await item.SyncUpdate(entity);
+                    return entity;
+                }
             }
             else
             {
                 entity.Id = Guid.NewGuid();
-                await Collection.New(entity).Save();
             }
 
+            await Collection.New(entity).Save();
+
             return entity;
+        }
+
+        public async Task BatchAddOrUpdate(TData[] entities)
+        {
+            foreach (var entity in entities)
+                await AddOrUpdate(entity);
         }
 
         public async Task Delete(Guid id)
@@ -41,6 +52,15 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             if (item == null)
                 throw new NullReferenceException("Can't find entity with id: " + id);
             await item.Delete();
+        }
+
+        public async Task BatchDelete(Predicate<TData> predicate)
+        {
+            var documents = Collection.Documents.Where(_ => predicate(_.Data));
+            foreach (var document in documents)
+            {
+                await document.Delete();
+            }
         }
 
         private IDocument<TData> GetById(Guid id) => Collection.Documents.FirstOrDefault(_ => _.Data.Id == id);

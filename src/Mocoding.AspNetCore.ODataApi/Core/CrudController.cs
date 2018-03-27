@@ -25,12 +25,12 @@ namespace Mocoding.AspNetCore.ODataApi.Core
         [EnableQuery]
         public IQueryable<TEntity> Get()
         {
-            return Repository.GetAll();
+            return Repository.QueryRecords();
         }
 
         public virtual TEntity Get([FromODataUri] Guid key)
         {
-            var entity = Repository.GetAll().FirstOrDefault(_ => _.Id == key);
+            var entity = Repository.QueryRecords().FirstOrDefault(_ => _.Id == key);
             if (entity == null)
                 throw new ArgumentNullException();
 
@@ -52,7 +52,7 @@ namespace Mocoding.AspNetCore.ODataApi.Core
 
         public virtual async Task<TEntity> Patch(Guid key, [FromBody]Delta<TEntity> moviePatch)
         {
-            var entity = Repository.GetAll().FirstOrDefault(_ => _.Id == key);
+            var entity = Repository.QueryRecords().FirstOrDefault(_ => _.Id == key);
             if (entity == null)
                 throw new ArgumentNullException();
 
