@@ -31,7 +31,13 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             return this;
         }
 
-        public IODataApiBuilder AddResource<T>(string customRoute = null)
+        public IODataApiBuilder AddResource<T>(ICrudRepository<T> customRepostiory = null)
+            where T : class, IEntity, new()
+        {
+            return AddResource(null, customRepostiory);
+        }
+
+        public IODataApiBuilder AddResource<T>(string customRoute = null, ICrudRepository<T> repository = null)
             where T : class, IEntity, new()
         {
             var type = typeof(T);
@@ -40,7 +46,7 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             _routes.Add(type, route);
 
             ODataModelBuilder.EntitySet<T>(route);
-            _services.AddSingleton(_factory.Create<T>(type.Name.ToLower()));
+            _services.AddSingleton(repository ?? _factory.Create<T>(type.Name.ToLower()));
 
             return this;
         }

@@ -19,12 +19,12 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 
         protected IDocument<List<TData>> Collection { get; }
 
-        public IQueryable<TData> QueryRecords()
+        public virtual IQueryable<TData> QueryRecords()
         {
             return Collection.Data.AsQueryable();
         }
 
-        public async Task<TData> AddOrUpdate(TData entity)
+        public virtual async Task<TData> AddOrUpdate(TData entity)
         {
             lock (_lock)
             {
@@ -36,7 +36,7 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             return entity;
         }
 
-        public async Task BatchAddOrUpdate(TData[] entities)
+        public virtual async Task BatchAddOrUpdate(TData[] entities)
         {
             lock (_lock)
             {
@@ -47,25 +47,25 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             await Collection.Save();
         }
 
-        public async Task Delete(Guid id)
+        public virtual async Task Delete(Guid id)
         {
             var item = Collection.Data.FirstOrDefault(_ => _.Id == id);
             if (item == null)
             {
-                throw new NullReferenceException("Can't find entity with id: " + id);
+                throw new KeyNotFoundException("Can't find entity with id: " + id);
             }
 
             Collection.Data.Remove(item);
             await Collection.Save();
         }
 
-        public async Task BatchDelete(Predicate<TData> predicate)
+        public virtual async Task BatchDelete(Predicate<TData> predicate)
         {
             Collection.Data.RemoveAll(predicate);
             await Collection.Save();
         }
 
-        private void AddOrUpdateInternal(TData entity)
+        protected virtual void AddOrUpdateInternal(TData entity)
         {
             if (entity.Id.HasValue)
             {

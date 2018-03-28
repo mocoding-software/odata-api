@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mocoding.AspNetCore.ODataApi.DataAccess;
@@ -16,9 +17,9 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 
         protected IDocumentCollection<TData> Collection { get; }
 
-        public IQueryable<TData> QueryRecords() => Collection.Documents.Select(_ => _.Data).AsQueryable();
+        public virtual IQueryable<TData> QueryRecords() => Collection.Documents.Select(_ => _.Data).AsQueryable();
 
-        public async Task<TData> AddOrUpdate(TData entity)
+        public virtual async Task<TData> AddOrUpdate(TData entity)
         {
             if (entity.Id.HasValue)
             {
@@ -39,21 +40,21 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             return entity;
         }
 
-        public async Task BatchAddOrUpdate(TData[] entities)
+        public virtual async Task BatchAddOrUpdate(TData[] entities)
         {
             foreach (var entity in entities)
                 await AddOrUpdate(entity);
         }
 
-        public async Task Delete(Guid id)
+        public virtual async Task Delete(Guid id)
         {
             var item = GetById(id);
             if (item == null)
-                throw new NullReferenceException("Can't find entity with id: " + id);
+                throw new KeyNotFoundException("Can't find entity with id: " + id);
             await item.Delete();
         }
 
-        public async Task BatchDelete(Predicate<TData> predicate)
+        public virtual async Task BatchDelete(Predicate<TData> predicate)
         {
             var documents = Collection.Documents.Where(_ => predicate(_.Data));
             foreach (var document in documents)
