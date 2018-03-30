@@ -31,12 +31,6 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             return this;
         }
 
-        public IODataApiBuilder AddResource<T>(ICrudRepository<T> customRepostiory = null)
-            where T : class, IEntity, new()
-        {
-            return AddResource(null, customRepostiory);
-        }
-
         public IODataApiBuilder AddResource<T>(string customRoute = null, ICrudRepository<T> repository = null)
             where T : class, IEntity, new()
         {

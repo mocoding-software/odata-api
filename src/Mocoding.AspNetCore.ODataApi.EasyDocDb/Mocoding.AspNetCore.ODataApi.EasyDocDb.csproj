@@ -1,8 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Description>EasyDocDb storage provider for generic OData API implementation</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageTags>netstandard;.net core;odata;generic;easydocdb;storage</PackageTags>
+    <PackageReleaseNotes>Initial Release.</PackageReleaseNotes>
+    <PackageIconUrl>https://mocoding.blob.core.windows.net/resources/odata-api/nugetIcon.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/mocoding-software/odata-api</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/mocoding-software/odata-api/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/mocoding-software/odata-api</RepositoryUrl>
     <CodeAnalysisRuleSet>..\..\_stylecop\StyleCop.ruleset</CodeAnalysisRuleSet>
+    <Authors>Mocoding</Authors>
   </PropertyGroup>
 
 
