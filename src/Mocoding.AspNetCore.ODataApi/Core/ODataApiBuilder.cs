@@ -21,9 +21,9 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             ODataModelBuilder = new ODataConventionModelBuilder();
         }
 
-        internal ODataConventionModelBuilder ODataModelBuilder { get; }
-
         public IEnumerable<Type> Types => _types;
+
+        internal ODataConventionModelBuilder ODataModelBuilder { get; }
 
         public IODataApiBuilder UseFactory(IRepositoryFactory factory)
         {

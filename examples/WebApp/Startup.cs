@@ -30,7 +30,9 @@ namespace WebApp
                 .AddODataApi()
                     .AddODataApiEasyDocDb()
                     .AddResource<User>()
-                    .AddResource<Role>("Roles"); // custom Entity Name / Url
+                    .AddResource<Role>("Roles") // custom Entity Name / Url
+                    .AddResource<KeyValuePair>("settings") // override controller test 1
+                    .AddResource<Order>(); // override controller test 2
 
             services.AddSwaggerSpecification();
         }

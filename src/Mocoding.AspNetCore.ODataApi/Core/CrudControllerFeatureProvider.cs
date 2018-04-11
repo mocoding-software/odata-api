@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
+    /// <summary>
+    /// This class is used to populate generic controllers for all resource types 
+    /// except those that have already a controller defined.
+    /// </summary>
     internal class CrudControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {
         private readonly ODataApiBuilder _modelBuilder;
@@ -19,13 +23,14 @@ namespace Mocoding.AspNetCore.ODataApi.Core
         {
             // This is designed to run after the default ControllerTypeProvider,
             // so the list of 'real' controllers has already been populated.
-            foreach (var entityType in _modelBuilder.Types)
-            {
-                var typeName = entityType.Name + "Controller";
-                if (feature.Controllers.Any(t => t.Name == typeName))
-                    continue;
+            var existingResourceTypes = feature.Controllers
+                    .Select(_ => _.GetODataResourceType(_modelBuilder))
+                    .Where(_ => _ != null).ToArray();
+            var newResourceTypes = _modelBuilder.Types.Except(existingResourceTypes);
 
-                // There's no 'real' controller for this entity, so add the generic version.
+            // There's no 'real' controller for this entity, so add the generic version.
+            foreach (var entityType in newResourceTypes)
+            {
                 var controllerType = typeof(CrudController<>)
                     .MakeGenericType(entityType).GetTypeInfo();
                 feature.Controllers.Add(controllerType);

@@ -7,7 +7,7 @@ using Mocoding.AspNetCore.ODataApi.DataAccess;
 
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
-    internal class CrudController<TEntity> : ODataController
+    public class CrudController<TEntity> : ODataController
         where TEntity : class, IEntity, new()
     {
         public CrudController(ICrudRepository<TEntity> repository)

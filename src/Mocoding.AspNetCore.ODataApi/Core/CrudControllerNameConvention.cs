@@ -2,10 +2,11 @@
 
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
-    // Used to set the controller name for routing purposes. Without this convention the
-    // names would be like 'CrudController`1[Resource]' instead of 'Resource'.
-    //
-    // Conventions can be applied as attributes or added to MvcOptions.Conventions.
+    /// <summary>
+    /// Used to set the controller name for routing purposes. Without this convention the
+    /// names would be like 'CrudController`1[Resource]' instead of 'Resource'.
+    /// Conventions can be applied as attributes or added to MvcOptions.Conventions.
+    /// </summary>
     internal class CrudControllerNameConvention : IControllerModelConvention
     {
         private readonly ODataApiBuilder _modelBuilder;
@@ -17,15 +18,11 @@ namespace Mocoding.AspNetCore.ODataApi.Core
 
         public void Apply(ControllerModel controller)
         {
-            if (!controller.ControllerType.IsGenericType ||
-                controller.ControllerType.GetGenericTypeDefinition() != typeof(CrudController<>))
-            {
-                // Not a CrudController, ignore.
+            var resourceType = controller.ControllerType.GetODataResourceType(_modelBuilder);
+            if (resourceType == null)
                 return;
-            }
 
-            var entityType = controller.ControllerType.GenericTypeArguments[0];
-            var route = _modelBuilder.MapRoute(entityType);
+            var route = _modelBuilder.MapRoute(resourceType);
             controller.ControllerName = route;
         }
     }
