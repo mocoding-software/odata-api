@@ -80,9 +80,8 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             else
             {
                 entity.Id = Guid.NewGuid();
+                Collection.Data.Add(entity);
             }
-
-            Collection.Data.Add(entity);
         }
     }
 }
