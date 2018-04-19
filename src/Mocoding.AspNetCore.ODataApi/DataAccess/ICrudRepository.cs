@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Mocoding.AspNetCore.ODataApi.DataAccess
@@ -12,6 +13,6 @@ namespace Mocoding.AspNetCore.ODataApi.DataAccess
         Task Delete(Guid id);
 
         Task BatchAddOrUpdate(T[] entities);
-        Task BatchDelete(Predicate<T> predicate);
+        Task BatchDelete(Expression<Func<T, bool>> predicate);
     }
 }

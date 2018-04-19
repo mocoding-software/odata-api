@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Mocoding.AspNetCore.ODataApi.DataAccess;
 using Mocoding.EasyDocDb;
@@ -54,9 +55,9 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             await item.Delete();
         }
 
-        public virtual async Task BatchDelete(Predicate<TData> predicate)
+        public virtual async Task BatchDelete(Expression<Func<TData, bool>> predicate)
         {
-            var documents = Collection.Documents.Where(_ => predicate(_.Data));
+            var documents = Collection.Documents.Where(predicate.Compile() as Func<IDocument<TData>, bool>);
             foreach (var document in documents)
             {
                 await document.Delete();

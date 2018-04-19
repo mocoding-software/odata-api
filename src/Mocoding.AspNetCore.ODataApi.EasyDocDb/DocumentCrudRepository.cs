@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Mocoding.AspNetCore.ODataApi.DataAccess;
 using Mocoding.EasyDocDb;
@@ -59,9 +60,10 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             await Collection.Save();
         }
 
-        public virtual async Task BatchDelete(Predicate<TData> predicate)
+        public virtual async Task BatchDelete(Expression<Func<TData, bool>> predicate)
         {
-            Collection.Data.RemoveAll(predicate);
+            var compiled = predicate.Compile();
+            Collection.Data.RemoveAll(_ => compiled(_));
             await Collection.Save();
         }
 
