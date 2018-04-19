@@ -2,9 +2,9 @@
 {
     public static class Extensions
     {
-        public static IODataApiBuilder AddODataApiMangoDb(this IODataApiBuilder oDataApiBuilder, string connection)
+        public static IODataApiBuilder AddODataApiMongoDb(this IODataApiBuilder oDataApiBuilder, string connection)
         {
-            return oDataApiBuilder.UseFactory(new MangoDbFactory(connection));
+            return oDataApiBuilder.UseFactory(new MongoDbFactory(connection));
         }
     }
 }

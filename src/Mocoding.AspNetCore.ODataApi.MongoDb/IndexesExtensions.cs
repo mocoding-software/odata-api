@@ -15,7 +15,7 @@ namespace Mocoding.AspNetCore.ODataApi.MongoDb
         
     }
 
-    public static class IndexesExtensions
+    static class IndexesExtensions
     {
         private const string Prefix = "__IndexedAttribute__";
 

@@ -2,10 +2,10 @@
 
 namespace Mocoding.AspNetCore.ODataApi.MongoDb
 {
-    class MangoDbFactory : IRepositoryFactory
+    class MongoDbFactory : IRepositoryFactory
     {
         private readonly string _conn;
-        public MangoDbFactory(string connection)
+        public MongoDbFactory(string connection)
         {
             _conn = connection;
         }
