@@ -36,13 +36,22 @@ namespace Mocoding.AspNetCore.ODataApi.Core
         {
             var type = typeof(T);
             var route = customRoute ?? type.Name;
-            _types.Add(type);
-            _routes.Add(type, route);
 
             ODataModelBuilder.EntitySet<T>(route);
             _services.AddSingleton(repository ?? _factory.Create<T>(type.Name.ToLower()));
 
             return this;
+        }
+
+        public IODataApiBuilder AddResource<T>(string customRoute, string customSourceName)
+            where T : class, IEntity, new()
+        {
+            if (string.IsNullOrEmpty(customRoute))
+                throw new ArgumentException(nameof(customRoute));
+            if (string.IsNullOrEmpty(customSourceName))
+                throw new ArgumentException(nameof(customSourceName));
+
+            return AddResource(customRoute, _factory.Create<T>(customSourceName));
         }
 
         public string MapRoute(Type entityType)
