@@ -37,6 +37,9 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             var type = typeof(T);
             var route = customRoute ?? type.Name;
 
+            _types.Add(type);
+            _routes.Add(type, route);
+
             ODataModelBuilder.EntitySet<T>(route);
             _services.AddSingleton(repository ?? _factory.Create<T>(type.Name.ToLower()));
 
