@@ -42,6 +42,5 @@ namespace Mocoding.AspNetCore.ODataApi.Core
 
             return null;
         }
-
     }
 }

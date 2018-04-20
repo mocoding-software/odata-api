@@ -20,30 +20,22 @@ namespace Mocoding.AspNetCore.ODataApi
             mvc.AddMvcOptions(options => options.Conventions.Add(new CrudControllerNameConvention(modelBuilder)))
                .ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new CrudControllerFeatureProvider(modelBuilder)));
 
-            services.AddMvcCore(options =>
-            {
-                foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>()
-                    .Where(_ => _.SupportedMediaTypes.Count == 0))
-                {
-                    outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.test-odata"));
-                }
-
-                foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>()
-                    .Where(_ => _.SupportedMediaTypes.Count == 0))
-                {
-                    inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.test-odata"));
-                }
-            });
-
             return modelBuilder;
         }
 
-        public static IRouteBuilder UseOData(this IRouteBuilder routeBuilder, IApplicationBuilder app, string routePrfix = "odata")
+        public static IRouteBuilder UseOData(this IRouteBuilder routeBuilder, IApplicationBuilder app, string routePrfix = ODataApiOptions.DefaultRoute)
+        {
+            return routeBuilder.UseOData(app, new ODataApiOptions() { RoutePrfix = routePrfix });
+        }
+
+        public static IRouteBuilder UseOData(this IRouteBuilder routeBuilder, IApplicationBuilder app, ODataApiOptions options)
         {
             var apiBuilder = app.ApplicationServices.GetService<ODataApiBuilder>();
 
+            options.OnBuildModel?.Invoke(apiBuilder.ODataModelBuilder);
+
             routeBuilder.Filter().Select().Expand().Count().MaxTop(null);
-            routeBuilder.MapODataServiceRoute("OData", routePrfix, apiBuilder.ODataModelBuilder.GetEdmModel());
+            routeBuilder.MapODataServiceRoute("OData", options.RoutePrfix, apiBuilder.ODataModelBuilder.GetEdmModel());
 
             return routeBuilder;
         }

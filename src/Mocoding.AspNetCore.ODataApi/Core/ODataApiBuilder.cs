@@ -40,7 +40,10 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             _types.Add(type);
             _routes.Add(type, route);
 
-            ODataModelBuilder.EntitySet<T>(route);
+            var entityType = ODataModelBuilder.EntitySet<T>(route).EntityType;
+            entityType.HasKey(_ => _.Id);
+            entityType.Property(_ => _.Id).IsOptional();
+
             _services.AddSingleton(repository ?? _factory.Create<T>(type.Name.ToLower()));
 
             return this;

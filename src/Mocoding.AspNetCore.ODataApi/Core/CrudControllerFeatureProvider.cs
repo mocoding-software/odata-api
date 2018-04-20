@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
     /// <summary>
-    /// This class is used to populate generic controllers for all resource types 
+    /// This class is used to populate generic controllers for all resource types
     /// except those that have already a controller defined.
     /// </summary>
     internal class CrudControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>

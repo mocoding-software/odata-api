@@ -37,15 +37,13 @@ namespace Mocoding.AspNetCore.ODataApi.Core
 
         public virtual async Task<TEntity> Post([FromBody]TEntity entity)
         {
-            await Repository.AddOrUpdate(entity);
-            return entity;
+            return await Repository.AddOrUpdate(entity);
         }
 
         public virtual async Task<TEntity> Put(Guid key, [FromBody]TEntity entity)
         {
             entity.Id = key;
-            await Repository.AddOrUpdate(entity);
-            return entity;
+            return await Repository.AddOrUpdate(entity);
         }
 
         public virtual async Task<TEntity> Patch(Guid key, [FromBody]Delta<TEntity> moviePatch)
@@ -55,8 +53,7 @@ namespace Mocoding.AspNetCore.ODataApi.Core
                 throw new ArgumentNullException();
 
             moviePatch.CopyChangedValues(entity);
-            await Repository.AddOrUpdate(entity);
-            return entity;
+            return await Repository.AddOrUpdate(entity);
         }
 
         public virtual async Task Delete(Guid key)

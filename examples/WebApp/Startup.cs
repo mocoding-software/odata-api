@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -42,11 +43,10 @@ namespace WebApp
             app.Map("/api", apiApp =>
             {
                 apiApp.UseSwaggerUIAndSpec();
-                apiApp.UseMvc(builder => builder.UseOData(app));
+                apiApp.UseMvc(builder => builder.UseOData(apiApp));
             });
 
             app.UseStaticFiles();
         }
     }
 }
-
