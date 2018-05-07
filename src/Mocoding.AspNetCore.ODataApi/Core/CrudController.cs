@@ -26,13 +26,13 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             return Repository.QueryRecords();
         }
 
-        public virtual TEntity Get([FromODataUri] Guid key)
+        public virtual IActionResult Get([FromODataUri] Guid key)
         {
             var entity = Repository.QueryRecords().FirstOrDefault(_ => _.Id == key);
             if (entity == null)
-                throw new ArgumentNullException();
+                return NotFound();
 
-            return entity;
+            return Ok(entity);
         }
 
         public virtual async Task<TEntity> Post([FromBody]TEntity entity)
@@ -46,14 +46,14 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             return await Repository.AddOrUpdate(entity);
         }
 
-        public virtual async Task<TEntity> Patch(Guid key, [FromBody]Delta<TEntity> moviePatch)
+        public virtual async Task<IActionResult> Patch(Guid key, [FromBody]Delta<TEntity> moviePatch)
         {
             var entity = Repository.QueryRecords().FirstOrDefault(_ => _.Id == key);
             if (entity == null)
-                throw new ArgumentNullException();
+                return NotFound();
 
             moviePatch.CopyChangedValues(entity);
-            return await Repository.AddOrUpdate(entity);
+            return Ok(await Repository.AddOrUpdate(entity));
         }
 
         public virtual async Task Delete(Guid key)

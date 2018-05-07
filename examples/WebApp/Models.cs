@@ -12,6 +12,8 @@ namespace WebApp
         public string Name { get; set; }
 
         public Address Address { get; set; }
+
+        public DateTime? Created { get; set; }
     }
 
     public class Address
