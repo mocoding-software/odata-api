@@ -23,7 +23,7 @@ namespace Mocoding.AspNetCore.ODataApi.Core
                 return;
 
             var route = _modelBuilder.MapRoute(resourceType);
-            controller.ControllerName = route;
+            //controller.ControllerName = route;
         }
     }
 }

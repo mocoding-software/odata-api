@@ -20,7 +20,7 @@
     <PackageReference Include="Mocoding.EasyDocDb.Json" Version="2.2.0" />
     <PackageReference Include="StyleCop.Analyzers">
       <PrivateAssets>all</PrivateAssets>
-      <Version>1.1.0-beta006</Version>
+      <Version>1.0.2</Version>
     </PackageReference>
   </ItemGroup>
 

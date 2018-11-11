@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Edm;
 using Mocoding.AspNetCore.ODataApi.DataAccess;
 
 namespace Mocoding.AspNetCore.ODataApi.Core
@@ -19,6 +20,11 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             _types = new List<Type>();
             _routes = new Dictionary<Type, string>();
             ODataModelBuilder = new ODataConventionModelBuilder();
+        }
+
+        public IEdmModel GetEdmModel()
+        {
+            return ODataModelBuilder.GetEdmModel();
         }
 
         public IEnumerable<Type> Types => _types;
@@ -58,6 +64,19 @@ namespace Mocoding.AspNetCore.ODataApi.Core
                 throw new ArgumentException(nameof(customSourceName));
 
             return AddResource(customRoute, _factory.Create<T>(customSourceName));
+        }
+
+        public IODataApiBuilder AddResource(Type type)
+        {
+            var route = type.Name.ToLower();
+
+            _types.Add(type);
+            _routes.Add(type, route);
+
+            var entityType = ODataModelBuilder.AddEntityType(type);
+            ODataModelBuilder.AddEntitySet(type.Name, entityType);
+
+            return this;
         }
 
         public string MapRoute(Type entityType)

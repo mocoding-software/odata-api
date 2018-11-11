@@ -13,8 +13,13 @@
     <CodeAnalysisRuleSet>..\..\_stylecop\StyleCop.ruleset</CodeAnalysisRuleSet>
     <Authors>Mocoding</Authors>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.7.2" />
+    <Compile Remove="CrudRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mocoding.AspNetCore.ODataApi\Mocoding.AspNetCore.ODataApi.csproj" />

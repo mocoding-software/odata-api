@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Mocoding.AspNetCore.ODataApi.DataAccess;
 
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
@@ -31,6 +32,8 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             // There's no 'real' controller for this entity, so add the generic version.
             foreach (var entityType in newResourceTypes)
             {
+                if (!entityType.IsSubclassOf(typeof(IEntity)))
+                    continue;
                 var controllerType = typeof(CrudController<>)
                     .MakeGenericType(entityType).GetTypeInfo();
                 feature.Controllers.Add(controllerType);

@@ -35,7 +35,7 @@ namespace Mocoding.AspNetCore.ODataApi
             options.OnBuildModel?.Invoke(apiBuilder.ODataModelBuilder);
 
             routeBuilder.Filter().Select().Expand().Count().MaxTop(null);
-            routeBuilder.MapODataServiceRoute("OData", options.RoutePrfix, apiBuilder.ODataModelBuilder.GetEdmModel());
+            routeBuilder.MapODataServiceRoute("OData", options.RoutePrfix, apiBuilder.GetEdmModel());
 
             return routeBuilder;
         }

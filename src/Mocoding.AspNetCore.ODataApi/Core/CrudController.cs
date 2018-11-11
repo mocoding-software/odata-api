@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Results;
 using Microsoft.AspNetCore.Mvc;
 using Mocoding.AspNetCore.ODataApi.DataAccess;
 
@@ -35,15 +36,17 @@ namespace Mocoding.AspNetCore.ODataApi.Core
             return Ok(entity);
         }
 
-        public virtual async Task<TEntity> Post([FromBody]TEntity entity)
+        public virtual async Task<CreatedODataResult<TEntity>> Post([FromBody]TEntity entity)
         {
-            return await Repository.AddOrUpdate(entity);
+            await Repository.AddOrUpdate(entity);
+            return base.Created(entity);
         }
 
-        public virtual async Task<TEntity> Put(Guid key, [FromBody]TEntity entity)
+        public virtual async Task<UpdatedODataResult<TEntity>> Put(Guid key, [FromBody]TEntity entity)
         {
             entity.Id = key;
-            return await Repository.AddOrUpdate(entity);
+            await Repository.AddOrUpdate(entity);
+            return base.Updated(entity);
         }
 
         public virtual async Task<IActionResult> Patch(Guid key, [FromBody]Delta<TEntity> moviePatch)
