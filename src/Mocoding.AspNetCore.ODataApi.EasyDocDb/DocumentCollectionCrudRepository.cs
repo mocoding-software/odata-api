@@ -3,67 +3,68 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Mocoding.AspNetCore.ODataApi.DataAccess;
+
 using Mocoding.EasyDocDb;
 
 namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 {
-    public class DocumentCollectionCrudRepository<TData> : ICrudRepository<TData>
-        where TData : class, IEntity, new()
+    public class DocumentCollectionCrudRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
+        where TEntity : class, new()
     {
-        public DocumentCollectionCrudRepository(IDocumentCollection<TData> collection)
+        private readonly IEntityKeyAccossor _keyAccossor;
+
+        public DocumentCollectionCrudRepository(IDocumentCollection<TEntity> collection, IEntityKeyAccossor keyAccossor)
         {
+            _keyAccossor = keyAccossor;
             Collection = collection;
         }
 
-        protected IDocumentCollection<TData> Collection { get; }
+        protected IDocumentCollection<TEntity> Collection { get; }
 
-        public virtual IQueryable<TData> QueryRecords() => Collection.Documents.Select(_ => _.Data).AsQueryable();
+        public virtual IQueryable<TEntity> QueryRecords() => Collection.Documents.Select(_ => _.Data).AsQueryable();
 
-        public virtual async Task<TData> AddOrUpdate(TData entity)
+        public virtual async Task<TEntity> AddOrUpdate(TEntity entity)
         {
-            if (entity.Id.HasValue)
-            {
-                var item = GetById(entity.Id.Value);
-                if (item != null)
-                {
-                    await item.SyncUpdate(entity);
-                    return entity;
-                }
-            }
-            else
-            {
-                entity.Id = Guid.NewGuid();
-            }
+            var id = _keyAccossor.GetKey<TEntity, TKey>(entity);
+            if (id == null)
+                throw new InvalidOperationException($"object key is missing");
 
-            await Collection.New(entity).Save();
+            var item = GetById(id);
+            if (item != null)
+                await item.SyncUpdate(entity);
+            else
+                await Collection.New(entity).Save();
 
             return entity;
         }
 
-        public virtual async Task BatchAddOrUpdate(TData[] entities)
+        public Task<TEntity> FindByKey(TKey key)
         {
-            foreach (var entity in entities)
-                await AddOrUpdate(entity);
+            return Task.FromResult(GetById(key)?.Data);
         }
 
-        public virtual async Task Delete(Guid id)
+        public async Task DeleteByKey(TKey key)
         {
-            var item = GetById(id);
+            var item = GetById(key);
             if (item == null)
-                throw new KeyNotFoundException("Can't find entity with id: " + id);
+                throw new KeyNotFoundException("Can't find entity with key: " + key);
             await item.Delete();
         }
 
-        public virtual async Task BatchDelete(Expression<Func<TData, bool>> predicate)
-        {
-            var documents = Collection.Documents.Where(predicate.Compile() as Func<IDocument<TData>, bool>);
-            foreach (var document in documents)
-            {
-                await document.Delete();
-            }
-        }
-
-        private IDocument<TData> GetById(Guid id) => Collection.Documents.FirstOrDefault(_ => _.Data.Id == id);
+        // public virtual async Task BatchAddOrUpdate(TEntity[] entities)
+        // {
+        //     foreach (var entity in entities)
+        //         await AddOrUpdate(entity);
+        // }
+        // public virtual async Task BatchDelete(Expression<Func<TEntity, bool>> predicate)
+        // {
+        //     var documents = Collection.Documents.Where(predicate.Compile() as Func<IDocument<TEntity>, bool>);
+        //     foreach (var document in documents)
+        //     {
+        //         await document.Delete();
+        //     }
+        // }
+        private IDocument<TEntity> GetById(TKey id) => Collection.Documents.FirstOrDefault(_ =>
+            EqualityComparer<TKey>.Default.Equals(_keyAccossor.GetKey<TEntity, TKey>(_.Data), id));
     }
 }

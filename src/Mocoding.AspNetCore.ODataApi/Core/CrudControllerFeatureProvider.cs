@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Mocoding.AspNetCore.ODataApi.DataAccess;
 
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
@@ -13,29 +12,30 @@ namespace Mocoding.AspNetCore.ODataApi.Core
     /// </summary>
     internal class CrudControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {
-        private readonly ODataApiBuilder _modelBuilder;
+        private readonly IModelMetadataProvider _metadataProvider;
 
-        public CrudControllerFeatureProvider(ODataApiBuilder modelBuilder)
+        public CrudControllerFeatureProvider(IModelMetadataProvider metadataProvider)
         {
-            _modelBuilder = modelBuilder;
+            _metadataProvider = metadataProvider;
         }
 
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
+            var model = _metadataProvider.GetModelMetadata();
+
+            // var types = model.Select(_ => _.EntityType).ToArray();
             // This is designed to run after the default ControllerTypeProvider,
             // so the list of 'real' controllers has already been populated.
-            var existingResourceTypes = feature.Controllers
-                    .Select(_ => _.GetODataResourceType(_modelBuilder))
-                    .Where(_ => _ != null).ToArray();
-            var newResourceTypes = _modelBuilder.Types.Except(existingResourceTypes);
+            // var existingResourceTypes = feature.Controllers
+            //        .Select(_ => _.GetODataResourceType(_metadataProvider, types))
+            //        .Where(_ => _ != null).ToArray();
+            // var newResourceTypes = types.Except(existingResourceTypes);
 
-            // There's no 'real' controller for this entity, so add the generic version.
-            foreach (var entityType in newResourceTypes)
+            //// There's no 'real' controller for this entity, so add the generic version.
+            foreach (var entityType in model)
             {
-                if (!entityType.IsSubclassOf(typeof(IEntity)))
-                    continue;
-                var controllerType = typeof(CrudController<>)
-                    .MakeGenericType(entityType).GetTypeInfo();
+                var controllerType = typeof(CrudController<,>)
+                    .MakeGenericType(entityType.EntityType, entityType.EntityKey.PropertyType).GetTypeInfo();
                 feature.Controllers.Add(controllerType);
             }
         }

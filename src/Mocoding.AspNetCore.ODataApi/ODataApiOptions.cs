@@ -15,6 +15,5 @@ namespace Mocoding.AspNetCore.ODataApi
         }
 
         public string RoutePrfix { get; set; }
-        public Action<ODataConventionModelBuilder> OnBuildModel { get; set; }
     }
 }

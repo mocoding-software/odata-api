@@ -39,7 +39,7 @@ namespace Mocoding.AspNetCore.ODataApi.MongoDb
             foreach (var nexIndex in newIndexes)
             {
                 var builder = new IndexKeysDefinitionBuilder<T>();
-                mongoCollection.Indexes.CreateOne(builder.Ascending(nexIndex), new CreateIndexOptions() { Name = Prefix + nexIndex });
+                mongoCollection.Indexes.CreateOne(new CreateIndexModel<T>(builder.Ascending(nexIndex), new CreateIndexOptions() { Name = Prefix + nexIndex }));
             }
 
         }

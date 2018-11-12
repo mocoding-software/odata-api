@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using MongoDB.Driver;
 
 namespace Mocoding.AspNetCore.ODataApi.MongoDb
 {
@@ -7,7 +8,14 @@ namespace Mocoding.AspNetCore.ODataApi.MongoDb
         public static IODataApiBuilder AddODataApiMongoDb(this IODataApiBuilder oDataApiBuilder, string connection)
         {
             MongoDefaults.GuidRepresentation = MongoDB.Bson.GuidRepresentation.Standard;
-            return oDataApiBuilder.UseFactory(new MongoDbFactory(connection));
+            oDataApiBuilder.Services.TryAddSingleton<IMongoDatabase>(services =>
+            {
+                var urlBuilder = new MongoUrlBuilder(connection);
+                var client = new MongoClient(connection);
+                return client.GetDatabase(urlBuilder.DatabaseName);
+            }); 
+
+            return oDataApiBuilder;
         }
     }
 }
