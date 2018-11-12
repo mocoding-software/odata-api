@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
@@ -9,21 +10,26 @@ namespace Mocoding.AspNetCore.ODataApi.Core
     /// </summary>
     internal class CrudControllerNameConvention : IControllerModelConvention
     {
-        private readonly ODataApiBuilder _modelBuilder;
+        private readonly IModelMetadataProvider _metadataProvider;
 
-        public CrudControllerNameConvention(ODataApiBuilder modelBuilder)
+        public CrudControllerNameConvention(IModelMetadataProvider metadataProvider)
         {
-            _modelBuilder = modelBuilder;
+            _metadataProvider = metadataProvider;
         }
 
         public void Apply(ControllerModel controller)
         {
-            var resourceType = controller.ControllerType.GetODataResourceType(_modelBuilder);
-            if (resourceType == null)
+            var target = typeof(CrudController<,>);
+            var controllerType = controller.ControllerType;
+            var isCrudController = controllerType.IsGenericType && controllerType.GetGenericTypeDefinition() == target;
+            if (!isCrudController)
                 return;
 
-            var route = _modelBuilder.MapRoute(resourceType);
-            controller.ControllerName = route;
+            var entityType = controllerType.GenericTypeArguments[0];
+            var metadata = _metadataProvider.GetModelMetadata();
+            var entityMetadata = metadata.FirstOrDefault(_ => _.EntityType == entityType);
+            if (entityMetadata != null)
+                controller.ControllerName = entityMetadata.Route;
         }
     }
 }

@@ -2,55 +2,69 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Mocoding.AspNetCore.ODataApi.DataAccess;
+
 using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Mocoding.AspNetCore.ODataApi.MongoDb
 {
-    public class CrudRepository<TData> : ICrudRepository<TData>
-        where TData : class, IEntity, new()
+    class CrudRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
+        where TEntity : class, new()
     {
         private readonly IMongoDatabase _database;
+        private readonly IEntityKeyAccossor _keyAccossor;
         private readonly string _tableName;
 
-        public CrudRepository(string connectionString, string name = null)
+        public CrudRepository(IMongoDatabase database, IEntityKeyAccossor keyAccossor)
         {
-            var connection = new MongoUrlBuilder(connectionString);
-            var client = new MongoClient(connectionString);
-            _database = client.GetDatabase(connection.DatabaseName);
-            _tableName = string.IsNullOrEmpty(name) ? typeof(TData).Name : name;
+            _database = database;
+            _keyAccossor = keyAccossor;
+            _tableName = typeof(TEntity).Name;
             Collection.EnsureIndexes();
         }
 
-        protected IMongoCollection<TData> Collection => _database.GetCollection<TData>(_tableName);
+        protected IMongoCollection<TEntity> Collection => _database.GetCollection<TEntity>(_tableName);
 
-        public virtual IQueryable<TData> QueryRecords() => Collection.AsQueryable();
+        public virtual IQueryable<TEntity> QueryRecords() => Collection.AsQueryable();
 
-        public virtual async Task<TData> AddOrUpdate(TData entity)
+        public virtual async Task<TEntity> AddOrUpdate(TEntity entity)
         {
-            if (!entity.Id.HasValue)
-                entity.Id = Guid.NewGuid();
-
-            await Collection.ReplaceOneAsync(new BsonDocument("_id", entity.Id), entity, new UpdateOptions() { IsUpsert = true });
-
+            var id = _keyAccossor.GetKey<TEntity, TKey>(entity);
+            if (id == null)
+                throw new InvalidOperationException($"object id is missing");
+            await Collection.ReplaceOneAsync(GetBsonDocument(id), entity, new UpdateOptions() {IsUpsert = true});
             return entity;
         }
 
-        public virtual Task Delete(Guid id) => Collection.DeleteOneAsync(new BsonDocument("_id", id));
-
-        public virtual Task BatchAddOrUpdate(TData[] entities)
+        public async Task<TEntity> FindByKey(TKey key)
         {
-            var model = entities.Select(_ =>
-            {
-                if (!_.Id.HasValue)
-                    _.Id = Guid.NewGuid();
-                return new ReplaceOneModel<TData>(new BsonDocument("_id", _.Id), _) { IsUpsert = true };
-            });
-
-            return Collection.BulkWriteAsync(model);
+            var result =  await Collection.FindAsync(GetBsonDocument(key));
+            return result.First();
         }
 
-        public virtual Task BatchDelete(Expression<Func<TData, bool>> predicate) => Collection.DeleteManyAsync(predicate);
+        public Task DeleteByKey(TKey key)
+        {
+            return Collection.DeleteOneAsync(GetBsonDocument(key));
+        }
+
+        private BsonDocument GetBsonDocument(TKey key)
+        {
+            var bsonValue = BsonValue.Create(key);
+            return new BsonDocument("_id", bsonValue);
+        }
+
+        //public virtual Task BatchAddOrUpdate(TEntity[] entities)
+        //{
+        //    var model = entities.Select(_ =>
+        //    {
+        //        if (!_.Id.HasValue)
+        //            _.Id = Guid.NewGuid();
+        //        return new ReplaceOneModel<TEntity>(new BsonDocument("_id", _.Id), _) { IsUpsert = true };
+        //    });
+
+        //    return Collection.BulkWriteAsync(model);
+        //}
+
+        //public virtual Task BatchDelete(Expression<Func<TEntity, bool>> predicate) => Collection.DeleteManyAsync(predicate);
     }
 }

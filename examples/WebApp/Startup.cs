@@ -29,7 +29,7 @@ namespace WebApp
                 .AddJsonFormatters(settings => settings.ContractResolver = new CamelCasePropertyNamesContractResolver())
                 .AddApiExplorer()
                 .AddODataApi()
-                    .AddODataApiEasyDocDb()
+                    .AddEasyDocDb()
                     .AddResource<User>()
                     .AddResource<Role>("Roles") // custom Entity Name / Url
                     .AddResource<KeyValuePair>("settings") // override controller test 1

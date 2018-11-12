@@ -3,29 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Mocoding.AspNetCore.ODataApi.DataAccess;
+
 using Mocoding.EasyDocDb;
 
 namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 {
-    public class DocumentCrudRepository<TData> : ICrudRepository<TData>
-        where TData : class, IEntity, new()
+    public class DocumentCrudRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
+        where TEntity : class
     {
+        private readonly IEntityKeyAccossor _keyAccossor;
         private readonly object _lock = new object();
 
-        public DocumentCrudRepository(IDocument<List<TData>> collection)
+        public DocumentCrudRepository(IDocument<List<TEntity>> collection, IEntityKeyAccossor keyAccossor)
         {
+            _keyAccossor = keyAccossor;
             Collection = collection;
         }
 
-        protected IDocument<List<TData>> Collection { get; }
+        protected IDocument<List<TEntity>> Collection { get; }
 
-        public virtual IQueryable<TData> QueryRecords()
+        public virtual IQueryable<TEntity> QueryRecords()
         {
             return Collection.Data.AsQueryable();
         }
 
-        public virtual async Task<TData> AddOrUpdate(TData entity)
+        public virtual async Task<TEntity> AddOrUpdate(TEntity entity)
         {
             lock (_lock)
             {
@@ -37,53 +39,65 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             return entity;
         }
 
-        public virtual async Task BatchAddOrUpdate(TData[] entities)
+        public Task<TEntity> FindByKey(TKey key)
         {
-            lock (_lock)
-            {
-                foreach (var entity in entities)
-                    AddOrUpdateInternal(entity);
-            }
-
-            await Collection.Save();
+            return Task.FromResult(Collection.Data.FirstOrDefault(FindByKeyPredicate(key)));
         }
 
-        public virtual async Task Delete(Guid id)
+        public async Task DeleteByKey(TKey key)
         {
-            var item = Collection.Data.FirstOrDefault(_ => _.Id == id);
+            var item = await FindByKey(key);
             if (item == null)
             {
-                throw new KeyNotFoundException("Can't find entity with id: " + id);
+                throw new KeyNotFoundException("Can't find entity with key: " + key);
             }
 
             Collection.Data.Remove(item);
             await Collection.Save();
         }
 
-        public virtual async Task BatchDelete(Expression<Func<TData, bool>> predicate)
+        protected virtual void AddOrUpdateInternal(TEntity entity)
         {
-            var compiled = predicate.Compile();
-            Collection.Data.RemoveAll(_ => compiled(_));
-            await Collection.Save();
-        }
+            var key = _keyAccossor.GetKey<TEntity, TKey>(entity);
+            if (key == null)
+                throw new InvalidOperationException($"object key is missing");
 
-        protected virtual void AddOrUpdateInternal(TData entity)
-        {
-            if (entity.Id.HasValue)
+            var item = Collection.Data.FirstOrDefault(FindByKeyPredicate(key));
+            if (item != null)
             {
-                var item = Collection.Data.FirstOrDefault(_ => _.Id == entity.Id);
                 var index = Collection.Data.IndexOf(item);
-                if (index != -1)
-                {
-                    Collection.Data.RemoveAt(index);
-                    Collection.Data.Insert(index, entity);
-                }
+                Collection.Data.RemoveAt(index);
+                Collection.Data.Insert(index, entity);
             }
             else
             {
-                entity.Id = Guid.NewGuid();
                 Collection.Data.Add(entity);
             }
         }
+
+        private Func<TEntity, bool> FindByKeyPredicate(TKey key)
+        {
+            return entity =>
+            {
+                var entityKey = _keyAccossor.GetKey<TEntity, TKey>(entity);
+                return EqualityComparer<TKey>.Default.Equals(entityKey, key);
+            };
+        }
+
+        // public virtual async Task BatchAddOrUpdate(TEntity[] entities)
+        // {
+        //    lock (_lock)
+        //     {
+        //         foreach (var entity in entities)
+        //             AddOrUpdateInternal(entity);
+        //     }
+        //     await Collection.Save();
+        // }
+        // public virtual async Task BatchDelete(Expression<Func<TEntity, bool>> predicate)
+        // {
+        //     var compiled = predicate.Compile();
+        //     Collection.Data.RemoveAll(_ => compiled(_));
+        //     await Collection.Save();
+        // }
     }
 }

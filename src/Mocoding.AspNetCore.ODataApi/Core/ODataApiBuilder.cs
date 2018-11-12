@@ -1,68 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Mocoding.AspNetCore.ODataApi.DataAccess;
+using Microsoft.OData.Edm;
 
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
-    public class ODataApiBuilder : IODataApiBuilder
+    internal class ODataApiBuilder : IODataApiBuilder, IModelMetadataProvider
     {
-        private readonly IServiceCollection _services;
-        private readonly IList<Type> _types;
-        private readonly IDictionary<Type, string> _routes;
-        private IRepositoryFactory _factory;
+        private readonly ODataConventionModelBuilder _modelBuilder;
+        private readonly IList<EntityMetadata> _metadata;
+        private IEdmModel _model;
 
         public ODataApiBuilder(IServiceCollection services)
         {
-            _services = services;
-            _types = new List<Type>();
-            _routes = new Dictionary<Type, string>();
-            ODataModelBuilder = new ODataConventionModelBuilder();
+            Services = services;
+            _modelBuilder = new ODataConventionModelBuilder();
+            _metadata = new List<EntityMetadata>();
         }
 
-        public IEnumerable<Type> Types => _types;
+        public IServiceCollection Services { get; }
 
-        internal ODataConventionModelBuilder ODataModelBuilder { get; }
-
-        public IODataApiBuilder UseFactory(IRepositoryFactory factory)
+        public IEdmModel GetEdmModel()
         {
-            _factory = factory;
-            return this;
+            return _model ?? (_model = GetEdmModelInternal());
         }
 
-        public IODataApiBuilder AddResource<T>(string customRoute = null, ICrudRepository<T> repository = null)
-            where T : class, IEntity, new()
+        public IEnumerable<EntityMetadata> GetModelMetadata()
+        {
+            return _metadata;
+        }
+
+        public IODataApiBuilder AddResource<T>(string customRoute = null)
+            where T : class
         {
             var type = typeof(T);
-            var route = customRoute ?? type.Name;
+            return AddResource(type, customRoute);
+        }
 
-            _types.Add(type);
-            _routes.Add(type, route);
-
-            var entityType = ODataModelBuilder.EntitySet<T>(route).EntityType;
-            entityType.HasKey(_ => _.Id);
-            entityType.Property(_ => _.Id).IsOptional();
-
-            _services.AddSingleton(repository ?? _factory.Create<T>(type.Name.ToLower()));
-
+        public IODataApiBuilder AddResource(Type type, string customRoute = null)
+        {
+            var route = customRoute ?? type.Name.ToLower();
+            _metadata.Add(new EntityMetadata(type, route));
+            var entityType = _modelBuilder.AddEntityType(type);
+            _modelBuilder.AddEntitySet(route, entityType);
             return this;
         }
 
-        public IODataApiBuilder AddResource<T>(string customRoute, string customSourceName)
-            where T : class, IEntity, new()
+        private IEdmModel GetEdmModelInternal()
         {
-            if (string.IsNullOrEmpty(customRoute))
-                throw new ArgumentException(nameof(customRoute));
-            if (string.IsNullOrEmpty(customSourceName))
-                throw new ArgumentException(nameof(customSourceName));
+            var model = _modelBuilder.GetEdmModel();
+            var edmTypes = model.SchemaElements.Where(_ => _ is IEdmEntityType).Cast<IEdmEntityType>();
+            foreach (var edmType in edmTypes)
+            {
+                var metadataType = _metadata.First(_ => _.EntityType.FullName == edmType.FullTypeName());
+                metadataType?.SetKey(edmType);
+            }
 
-            return AddResource(customRoute, _factory.Create<T>(customSourceName));
-        }
-
-        public string MapRoute(Type entityType)
-        {
-            return _routes[entityType];
+            return model;
         }
     }
 }

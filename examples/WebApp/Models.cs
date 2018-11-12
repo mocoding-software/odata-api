@@ -1,11 +1,10 @@
 ﻿using System;
-using Mocoding.AspNetCore.ODataApi.DataAccess;
 using Mocoding.AspNetCore.ODataApi.EasyDocDb.Helpers;
 
 namespace WebApp
 {
     [ReadOptimized]
-    public class User : IEntity
+    public class User
     {
         public Guid? Id { get; set; }
 
@@ -23,7 +22,7 @@ namespace WebApp
     }
 
     [ReadOptimized]
-    public class Role : IEntity
+    public class Role
     {
         public Guid? Id { get; set; }
 
@@ -31,7 +30,7 @@ namespace WebApp
     }
 
     [ReadOptimized]
-    public class KeyValuePair : IEntity
+    public class KeyValuePair
     {
         public Guid? Id { get; set; }
 
@@ -40,7 +39,7 @@ namespace WebApp
     }
 
     [ReadOptimized]
-    public class Order : IEntity
+    public class Order
     {
         public Guid? Id { get; set; }
         public string Title { get; set; }

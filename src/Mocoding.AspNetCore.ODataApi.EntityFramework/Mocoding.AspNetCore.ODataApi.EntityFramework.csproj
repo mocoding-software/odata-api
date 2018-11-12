@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>MongoDb storage provider for generic OData API implementation</Description>
+    <Description>EntityFramework storage provider for generic OData API implementation</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageTags>netstandard;.net core;odata;generic;mongodb;storage;nosql</PackageTags>
+    <PackageTags>netstandard;.net core;odata;generic;sql;mssql,mssql server,storage;</PackageTags>
     <PackageReleaseNotes>Initial Release.</PackageReleaseNotes>
     <PackageIconUrl>https://mocoding.blob.core.windows.net/resources/odata-api/nugetIcon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/mocoding-software/odata-api</PackageProjectUrl>
@@ -13,8 +13,13 @@
     <CodeAnalysisRuleSet>..\..\_stylecop\StyleCop.ruleset</CodeAnalysisRuleSet>
     <Authors>Mocoding</Authors>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.7.2" />
+    <Compile Remove="CrudRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mocoding.AspNetCore.ODataApi\Mocoding.AspNetCore.ODataApi.csproj" />

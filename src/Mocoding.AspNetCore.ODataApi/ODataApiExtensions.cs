@@ -4,6 +4,7 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Net.Http.Headers;
 using Mocoding.AspNetCore.ODataApi.Core;
 
@@ -16,7 +17,8 @@ namespace Mocoding.AspNetCore.ODataApi
             var services = mvc.Services;
             var modelBuilder = new ODataApiBuilder(services);
             services.AddOData();
-            services.AddSingleton(modelBuilder);
+            services.AddSingleton<IModelMetadataProvider>(modelBuilder);
+            services.TryAddSingleton<IEntityKeyAccossor, DefaultEntityKeyAccessor>();
             mvc.AddMvcOptions(options => options.Conventions.Add(new CrudControllerNameConvention(modelBuilder)))
                .ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new CrudControllerFeatureProvider(modelBuilder)));
 
@@ -30,12 +32,10 @@ namespace Mocoding.AspNetCore.ODataApi
 
         public static IRouteBuilder UseOData(this IRouteBuilder routeBuilder, IApplicationBuilder app, ODataApiOptions options)
         {
-            var apiBuilder = app.ApplicationServices.GetService<ODataApiBuilder>();
-
-            options.OnBuildModel?.Invoke(apiBuilder.ODataModelBuilder);
+            var apiBuilder = app.ApplicationServices.GetRequiredService<IModelMetadataProvider>();
 
             routeBuilder.Filter().Select().Expand().Count().MaxTop(null);
-            routeBuilder.MapODataServiceRoute("OData", options.RoutePrfix, apiBuilder.ODataModelBuilder.GetEdmModel());
+            routeBuilder.MapODataServiceRoute("OData", options.RoutePrfix, apiBuilder.GetEdmModel());
 
             return routeBuilder;
         }
