@@ -18,14 +18,6 @@ namespace WebApp.EF.Models
         public virtual DbSet<Categories> Categories { get; set; }
         public virtual DbSet<Transactions> Transactions { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=.;Database=EmDb;User=sa;Password=<pass>");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Categories>(entity =>
