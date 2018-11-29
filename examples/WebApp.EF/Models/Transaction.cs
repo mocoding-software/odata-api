@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WebApp.EF.Models
 {
-    public partial class Transactions
+    public partial class Transaction
     {
         public Guid Id { get; set; }
         public decimal Amount { get; set; }
@@ -15,6 +15,6 @@ namespace WebApp.EF.Models
         public bool IsDeleted { get; set; }
         public Guid? ImportJobId { get; set; }
 
-        public Categories Category { get; set; }
+        public Category Category { get; set; }
     }
 }

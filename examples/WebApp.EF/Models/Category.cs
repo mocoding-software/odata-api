@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace WebApp.EF.Models
 {
-    public partial class Categories
+    public partial class Category
     {
-        public Categories()
+        public Category()
         {
-            Transactions = new HashSet<Transactions>();
+            Transactions = new HashSet<Transaction>();
         }
 
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
 
-        public ICollection<Transactions> Transactions { get; set; }
+        public ICollection<Transaction> Transactions { get; set; }
     }
 }

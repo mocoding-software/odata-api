@@ -13,9 +13,15 @@ namespace Mocoding.AspNetCore.ODataApi.EntityFramework
         {
             var serviceProvider = builder.Services.BuildServiceProvider();
             var context = serviceProvider.GetRequiredService<TContext>();
+            var properties = typeof(TContext).GetProperties();
             var types = context.Model.GetEntityTypes();
             foreach (var entityType in types)
-                builder.AddResource(entityType.ClrType);
+            {
+                var dbSetType = typeof(DbSet<>).MakeGenericType(entityType.ClrType);
+                var property = properties.FirstOrDefault(_ => _.PropertyType.IsAssignableFrom(dbSetType));
+                builder.AddResource(entityType.ClrType, property != null ? property.Name.ToLower() : null);
+            }
+                
             
             builder.Services.TryAddTransient<DbContext, TContext>();
             builder.Services.TryAddScoped(typeof(ICrudRepository<,>), typeof(DbSetRepository<,>));

@@ -15,12 +15,12 @@ namespace WebApp.EF.Models
         {
         }
 
-        public virtual DbSet<Categories> Categories { get; set; }
-        public virtual DbSet<Transactions> Transactions { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Categories>(entity =>
+            modelBuilder.Entity<Category>(entity =>
             {
                 entity.Property(e => e.Id).HasDefaultValueSql("(newsequentialid())");
 
@@ -34,7 +34,7 @@ namespace WebApp.EF.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Transactions>(entity =>
+            modelBuilder.Entity<Transaction>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
