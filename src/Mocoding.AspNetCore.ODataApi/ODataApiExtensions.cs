@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +35,7 @@ namespace Mocoding.AspNetCore.ODataApi
         {
             var apiBuilder = app.ApplicationServices.GetRequiredService<IModelMetadataProvider>();
 
-            routeBuilder.Filter().Select().Expand().Count().MaxTop(null);
+            routeBuilder.Filter().Select().Expand().Count().OrderBy().MaxTop(null);
             routeBuilder.MapODataServiceRoute("OData", options.RoutePrfix, apiBuilder.GetEdmModel());
 
             return routeBuilder;
