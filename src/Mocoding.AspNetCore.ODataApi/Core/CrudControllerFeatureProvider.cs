@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -23,15 +24,7 @@ namespace Mocoding.AspNetCore.ODataApi.Core
         {
             var model = _metadataProvider.GetModelMetadata();
 
-            // var types = model.Select(_ => _.EntityType).ToArray();
-            // This is designed to run after the default ControllerTypeProvider,
-            // so the list of 'real' controllers has already been populated.
-            // var existingResourceTypes = feature.Controllers
-            //        .Select(_ => _.GetODataResourceType(_metadataProvider, types))
-            //        .Where(_ => _ != null).ToArray();
-            // var newResourceTypes = types.Except(existingResourceTypes);
-
-            //// There's no 'real' controller for this entity, so add the generic version.
+            // There's no 'real' controller for this entity, so add the generic version.
             foreach (var entityType in model)
             {
                 var controllerType = typeof(CrudController<,>)

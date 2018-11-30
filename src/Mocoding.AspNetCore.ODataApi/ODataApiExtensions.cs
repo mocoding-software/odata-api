@@ -13,10 +13,10 @@ namespace Mocoding.AspNetCore.ODataApi
 {
     public static class ODataApiExtensions
     {
-        public static IODataApiBuilder AddODataApi(this IMvcCoreBuilder mvc)
+        public static IODataApiBuilder AddODataApi(this IMvcCoreBuilder mvc, bool enableLowerCamelCase = true)
         {
             var services = mvc.Services;
-            var modelBuilder = new ODataApiBuilder(services);
+            var modelBuilder = new ODataApiBuilder(services, enableLowerCamelCase);
             services.AddOData();
             services.AddSingleton<IModelMetadataProvider>(modelBuilder);
             services.TryAddSingleton<IEntityKeyAccossor, DefaultEntityKeyAccessor>();

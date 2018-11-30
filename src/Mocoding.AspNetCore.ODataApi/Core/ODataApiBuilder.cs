@@ -13,10 +13,12 @@ namespace Mocoding.AspNetCore.ODataApi.Core
         private readonly IList<EntityMetadata> _metadata;
         private IEdmModel _model;
 
-        public ODataApiBuilder(IServiceCollection services)
+        public ODataApiBuilder(IServiceCollection services, bool enableLowerCamelCase)
         {
             Services = services;
             _modelBuilder = new ODataConventionModelBuilder();
+            if (enableLowerCamelCase)
+                _modelBuilder.EnableLowerCamelCase();
             _metadata = new List<EntityMetadata>();
         }
 

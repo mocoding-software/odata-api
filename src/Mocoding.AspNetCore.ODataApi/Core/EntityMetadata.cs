@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -22,7 +23,7 @@ namespace Mocoding.AspNetCore.ODataApi.Core
         public void SetKey(IEdmEntityType edmType)
         {
             var key = edmType.DeclaredKey.First();
-            EntityKey = EntityType.GetProperty(key.Name);
+            EntityKey = EntityType.GetProperty(key.Name) ?? EntityType.GetProperty(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(key.Name));
         }
     }
 }
