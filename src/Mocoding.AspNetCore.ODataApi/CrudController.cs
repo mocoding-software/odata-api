@@ -39,8 +39,12 @@ namespace Mocoding.AspNetCore.ODataApi
             return base.Created(entity);
         }
 
-        public virtual async Task<UpdatedODataResult<TEntity>> Put(TKey key, [FromBody]TEntity entity)
+        public virtual async Task<UpdatedODataResult<TEntity>> Put(TKey key, [FromBody]Delta<TEntity> patch)
         {
+            var entity = await Repository.FindByKey(key);
+            if (entity == null)
+                throw new KeyNotFoundException();
+            patch.Put(entity);
             await Repository.AddOrUpdate(entity);
             return base.Updated(entity);
         }
@@ -51,7 +55,8 @@ namespace Mocoding.AspNetCore.ODataApi
             if (entity == null)
                 throw new KeyNotFoundException();
 
-            patch.CopyChangedValues(entity);
+            patch.Patch(entity);
+            await Repository.AddOrUpdate(entity);
             return base.Updated(entity);
         }
 

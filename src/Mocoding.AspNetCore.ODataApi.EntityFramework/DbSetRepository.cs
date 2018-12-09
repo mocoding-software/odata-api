@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.EntityFrameworkCore;
@@ -26,13 +27,19 @@ namespace Mocoding.AspNetCore.ODataApi.EntityFramework
 
         public async Task<TEntity> AddOrUpdate(TEntity entity)
         {
-            var id = _keyAccossor.GetKey<TEntity, TKey>(entity);
-            var dbEntity = (id != null) 
+            // var contains = ;
+            //var id = _keyAccossor.GetKey<TEntity, TKey>(entity);
+            //if (id == null)
+            //    throw new InvalidOperationException($"object key is missing");
+
+            //var dbEntity = await FindByKey(id);
+
+            var result = _repository.Local.Contains(entity)
                 ? _repository.Update(entity)
-                : await _repository.AddAsync(entity);
+                : _repository.Add(entity);
             
             await _context.SaveChangesAsync();
-            return dbEntity.Entity;
+            return result.Entity;
         }
 
         public async Task<TEntity> FindByKey(TKey key)
