@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,24 +11,29 @@ namespace Mocoding.AspNetCore.ODataApi.EntityFramework
 {
     public static class Extensions
     {
-        public static IODataApiBuilder AddEntityFramework<TContext>(this IODataApiBuilder builder) where TContext : DbContext
+        public static IODataApiBuilder AddResources<TContext>(this IODataApiBuilder builder) where TContext : DbContext
         {
-            var serviceProvider = builder.Services.BuildServiceProvider();
-            var context = serviceProvider.GetRequiredService<TContext>();
             var properties = typeof(TContext).GetProperties();
-            var types = context.Model.GetEntityTypes();
-            foreach (var entityType in types)
+            var dbSetType = typeof(DbSet<>);
+            foreach (var property in properties.Where(_=> _.PropertyType.IsGenericType && _.PropertyType.GetGenericTypeDefinition() == dbSetType))
             {
-                var dbSetType = typeof(DbSet<>).MakeGenericType(entityType.ClrType);
-                var property = properties.FirstOrDefault(_ => _.PropertyType.IsAssignableFrom(dbSetType));
-                builder.AddResource(entityType.ClrType, property != null ? property.Name.ToLower() : null);
+                var type = property.PropertyType.GenericTypeArguments[0];
+                builder.AddResource(type, property.Name.ToLower());
             }
-                
-            
-            builder.Services.TryAddTransient<DbContext, TContext>();
-            builder.Services.TryAddScoped(typeof(ICrudRepository<,>), typeof(DbSetRepository<,>));
-            return builder; 
-            
+
+
+            return builder;
         }
+
+        public static IServiceCollection AddEntityFrameworkGenericRepository<TContext>(this IServiceCollection services, Action<DbContextOptionsBuilder> configure)
+            where TContext : DbContext
+        {
+            services
+                .AddDbContext<TContext>(configure)
+                .TryAddScoped(typeof(ICrudRepository<,>), typeof(DbSetRepository<,>));
+            return services;
+        }
+
+
     }
 }

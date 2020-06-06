@@ -19,6 +19,7 @@ namespace WebApp.EF
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://localhost:5002")
                 .UseStartup<Startup>();
     }
 }

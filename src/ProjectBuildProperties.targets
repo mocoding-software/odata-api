@@ -1,0 +1,31 @@
+<Project>
+    <PropertyGroup>       
+      <TargetFramework>netcoreapp3.1</TargetFramework>      
+    
+      <PackageIconUrl>https://mocoding.blob.core.windows.net/resources/odata-api/nugetIcon.png</PackageIconUrl>
+      <PackageProjectUrl>https://github.com/mocoding-software/odata-api</PackageProjectUrl>
+      <PackageLicenseUrl>https://raw.githubusercontent.com/mocoding-software/odata-api/master/LICENSE</PackageLicenseUrl>
+      <RepositoryType>git</RepositoryType>
+      <RepositoryUrl>https://github.com/mocoding-software/odata-api</RepositoryUrl>
+      <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
+      <Authors>MOCODING LLC,Dennis Miasoutov</Authors>
+      <DebugType>Full</DebugType>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>    
+      <None Include="../../icon.png" Pack="true" PackagePath="" />
+      <None Include="../../LICENSE" Pack="true" PackagePath="" />    
+  </ItemGroup>
+
+  <ItemGroup>  
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

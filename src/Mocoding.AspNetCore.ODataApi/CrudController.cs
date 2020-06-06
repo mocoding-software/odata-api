@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
@@ -36,7 +35,7 @@ namespace Mocoding.AspNetCore.ODataApi
         public virtual async Task<CreatedODataResult<TEntity>> Post([FromBody]TEntity entity)
         {
             await Repository.AddOrUpdate(entity);
-            return base.Created(entity);
+            return Created(entity);
         }
 
         public virtual async Task<UpdatedODataResult<TEntity>> Put(TKey key, [FromBody]Delta<TEntity> patch)
@@ -46,7 +45,7 @@ namespace Mocoding.AspNetCore.ODataApi
                 throw new KeyNotFoundException();
             patch.Put(entity);
             await Repository.AddOrUpdate(entity);
-            return base.Updated(entity);
+            return Updated(entity);
         }
 
         public virtual async Task<UpdatedODataResult<TEntity>> Patch(TKey key, [FromBody]Delta<TEntity> patch)
@@ -57,7 +56,7 @@ namespace Mocoding.AspNetCore.ODataApi
 
             patch.Patch(entity);
             await Repository.AddOrUpdate(entity);
-            return base.Updated(entity);
+            return Updated(entity);
         }
 
         public virtual async Task Delete(TKey key)

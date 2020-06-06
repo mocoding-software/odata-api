@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 using Mocoding.EasyDocDb;
@@ -11,11 +10,11 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
     public class DocumentCollectionCrudRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
         where TEntity : class, new()
     {
-        private readonly IEntityKeyAccossor _keyAccossor;
+        private readonly IEntityKeyAccessor _keyAccessor;
 
-        public DocumentCollectionCrudRepository(IDocumentCollection<TEntity> collection, IEntityKeyAccossor keyAccossor)
+        public DocumentCollectionCrudRepository(IDocumentCollection<TEntity> collection, IEntityKeyAccessor keyAccessor)
         {
-            _keyAccossor = keyAccossor;
+            _keyAccessor = keyAccessor;
             Collection = collection;
         }
 
@@ -25,7 +24,7 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 
         public virtual async Task<TEntity> AddOrUpdate(TEntity entity)
         {
-            var id = _keyAccossor.GetKey<TEntity, TKey>(entity);
+            var id = _keyAccessor.GetKey<TEntity, TKey>(entity);
             if (id == null)
                 throw new InvalidOperationException($"object key is missing");
 
@@ -65,6 +64,6 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
         //     }
         // }
         private IDocument<TEntity> GetById(TKey id) => Collection.Documents.FirstOrDefault(_ =>
-            EqualityComparer<TKey>.Default.Equals(_keyAccossor.GetKey<TEntity, TKey>(_.Data), id));
+            EqualityComparer<TKey>.Default.Equals(_keyAccessor.GetKey<TEntity, TKey>(_.Data), id));
     }
 }

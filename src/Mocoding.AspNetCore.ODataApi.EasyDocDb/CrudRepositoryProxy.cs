@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
@@ -9,11 +6,11 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
     internal class CrudRepositoryProxy<TEntity, TKey> : ICrudRepository<TEntity, TKey>
         where TEntity : class, new()
     {
-        private ICrudRepository<TEntity, TKey> _repository;
+        private readonly ICrudRepository<TEntity, TKey> _repository;
 
-        public CrudRepositoryProxy(DocumentRepositoryFactory factory, IEntityKeyAccossor keyAccossor)
+        public CrudRepositoryProxy(DocumentRepositoryFactory factory)
         {
-            _repository = factory.Get<TEntity, TKey>(keyAccossor);
+            _repository = factory.Create<TEntity, TKey>();
         }
 
         public Task<TEntity> AddOrUpdate(TEntity entity)

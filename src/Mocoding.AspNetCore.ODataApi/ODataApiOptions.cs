@@ -1,19 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNet.OData.Builder;
-
-namespace Mocoding.AspNetCore.ODataApi
+﻿namespace Mocoding.AspNetCore.ODataApi
 {
+    /// <summary>
+    /// ODataApi Options
+    /// </summary>
     public class ODataApiOptions
     {
         public const string DefaultRoute = "odata";
 
         public ODataApiOptions()
         {
-            RoutePrfix = DefaultRoute;
+            RoutePrefix = DefaultRoute;
         }
 
-        public string RoutePrfix { get; set; }
+        /// <summary>
+        /// Gets or sets the route prefix.
+        /// </summary>
+        /// <value>
+        /// The route prefix.
+        /// </value>
+        public string RoutePrefix { get; set; }
     }
 }
