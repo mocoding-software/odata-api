@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.OData.Edm;
 
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
@@ -26,10 +27,10 @@ namespace Mocoding.AspNetCore.ODataApi.Core
                 return;
 
             var entityType = controllerType.GenericTypeArguments[0];
-            var metadata = _metadataProvider.GetModelMetadata();
-            var entityMetadata = metadata.FirstOrDefault(_ => _.EntityType == entityType);
-            if (entityMetadata != null)
-                controller.ControllerName = entityMetadata.Route;
+            var model = _metadataProvider.GetEdmModel();
+            var entitySet = model.EntityContainer.EntitySets().FirstOrDefault(_ => _.Type.AsElementType().FullTypeName() == entityType.FullName);
+            if (entitySet != null)
+                controller.ControllerName = entitySet.Name;
         }
     }
 }

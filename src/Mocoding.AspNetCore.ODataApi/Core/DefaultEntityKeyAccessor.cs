@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
+using Mocoding.AspNetCore.ODataApi.Core;
 
-namespace Mocoding.AspNetCore.ODataApi.Core
+namespace Mocoding.AspNetCore.ODataApi.DataAccess
 {
-    internal class DefaultEntityKeyAccessor : IEntityKeyAccossor
+    internal class DefaultEntityKeyAccessor : IEntityKeyAccessor
     {
-        private readonly IEnumerable<EntityMetadata> _metadata;
+        private readonly IDictionary<Type, PropertyInfo> _mapping;
 
         public DefaultEntityKeyAccessor(IModelMetadataProvider metadataProvider)
         {
-            _metadata = metadataProvider.GetModelMetadata();
+            _mapping = metadataProvider.GetEdmModel().GetEntityKeyMapping().ToDictionary(_ => _.Key, _ => _.Value);
         }
 
         public TKey GetKey<TEntity, TKey>(TEntity entity)
         {
             var entityType = typeof(TEntity);
-            var entityMetadata = _metadata.First(_ => _.EntityType == entityType);
-            return (TKey)entityMetadata.EntityKey.GetValue(entity);
+            var keyProperty = _mapping[entityType];
+            return (TKey)keyProperty.GetValue(entity);
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mocoding.AspNetCore.ODataApi;
 using Mocoding.AspNetCore.ODataApi.EasyDocDb;
-using Newtonsoft.Json.Serialization;
+using Mocoding.EasyDocDb;
+using Mocoding.EasyDocDb.FileSystem;
+using Mocoding.EasyDocDb.Json;
 
 namespace WebApp
 {
@@ -23,30 +24,21 @@ namespace WebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
             services
+                .AddSingleton<IDocumentStorage, EmbeddedStorage>()
+                .AddSingleton<IDocumentSerializer, JsonSerializer>()
+                .AddEasyDocDbGenericRepository(options => options.Connection = "../data")
                 .AddMvcCore()
-                .AddJsonFormatters(settings => settings.ContractResolver = new CamelCasePropertyNamesContractResolver())
-                .AddApiExplorer()
                 .AddODataApi()
-                    .AddEasyDocDb()
                     .AddResource<User>()
                     .AddResource<Role>("Roles") // custom Entity Name / Url
                     .AddResource<KeyValuePair>("settings") // override controller test 1
                     .AddResource<Order>(); // override controller test 2
-
-            services.AddSwaggerSpecification();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider services)
+        public void Configure(IApplicationBuilder app)
         {
-            app.Map("/api", apiApp =>
-            {
-                apiApp.UseSwaggerUIAndSpec();
-                apiApp.UseMvc(builder => builder.UseOData(apiApp));
-            });
-
-            app.UseStaticFiles();
+            app.UseODataApi();
         }
     }
 }

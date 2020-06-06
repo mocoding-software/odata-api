@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Mocoding.AspNetCore.ODataApi;
 using Mocoding.AspNetCore.ODataApi.EntityFramework;
-using Newtonsoft.Json.Serialization;
 using WebApp.EF.Models;
 
 namespace WebApp.EF
@@ -20,17 +14,14 @@ namespace WebApp.EF
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<EmDbContext>(options =>
+            services.AddEntityFrameworkGenericRepository<EmDbContext>(options =>
                 options.UseSqlServer("Server=.;Database=EmDb;User=sa;Password=<pass>"));
 
             services
                 .AddMvcCore()
-                .AddJsonFormatters(settings => settings.ContractResolver = new CamelCasePropertyNamesContractResolver())
                 .AddApiExplorer()
                 .AddODataApi()
-                    .AddEntityFramework<EmDbContext>();
-
-            
+                    .AddResources<EmDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +32,7 @@ namespace WebApp.EF
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvc(builder => builder.UseOData(app));
+            app.UseODataApi();
         }
     }
 }

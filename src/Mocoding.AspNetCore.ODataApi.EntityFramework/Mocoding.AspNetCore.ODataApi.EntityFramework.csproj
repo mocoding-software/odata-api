@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>EntityFramework storage provider for generic OData API implementation</Description>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageTags>netstandard;.net core;odata;generic;sql;mssql,mssql server,storage;</PackageTags>
     <PackageReleaseNotes>Initial Release.</PackageReleaseNotes>
     <PackageIconUrl>https://mocoding.blob.core.windows.net/resources/odata-api/nugetIcon.png</PackageIconUrl>
@@ -15,11 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="CrudRepository.cs" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mocoding.AspNetCore.ODataApi\Mocoding.AspNetCore.ODataApi.csproj" />

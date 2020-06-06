@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.OData.Edm;
+using Mocoding.AspNetCore.ODataApi.DataAccess;
 
 namespace Mocoding.AspNetCore.ODataApi.Core
 {
@@ -9,6 +8,6 @@ namespace Mocoding.AspNetCore.ODataApi.Core
     {
         IEdmModel GetEdmModel();
 
-        IEnumerable<EntityMetadata> GetModelMetadata();
+        // IEnumerable<EntityMetadata> GetModelMetadata();
     }
 }

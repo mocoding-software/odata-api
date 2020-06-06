@@ -11,13 +11,13 @@ namespace Mocoding.AspNetCore.ODataApi.EntityFramework
     {
         private readonly DbSet<TEntity> _repository;
         private readonly DbContext _context;
-        private readonly IEntityKeyAccossor _keyAccossor;
+        private readonly IEntityKeyAccessor _keyAccessor;
 
-        public DbSetRepository(DbContext context, IEntityKeyAccossor keyAccossor)
+        public DbSetRepository(DbContext context, IEntityKeyAccessor keyAccessor)
         {
             _repository = context.Set<TEntity>();
             _context = context;
-            _keyAccossor = keyAccossor;
+            _keyAccessor = keyAccessor;
         }
       
         public IQueryable<TEntity> QueryRecords()
@@ -28,7 +28,7 @@ namespace Mocoding.AspNetCore.ODataApi.EntityFramework
         public async Task<TEntity> AddOrUpdate(TEntity entity)
         {
             // var contains = ;
-            //var id = _keyAccossor.GetKey<TEntity, TKey>(entity);
+            //var id = _keyAccessor.GetKey<TEntity, TKey>(entity);
             //if (id == null)
             //    throw new InvalidOperationException($"object key is missing");
 
