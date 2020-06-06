@@ -1,6 +1,6 @@
 assembly-versioning-scheme: Major
 mode: ContinuousDeployment
-next-version: 2.3.0
+next-version: 3.0.0
 increment: Patch
 legacy-semver-padding: 1
 build-metadata-padding: 1
