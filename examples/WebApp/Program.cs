@@ -12,7 +12,7 @@ namespace WebApp
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://localhost:5002")
+                .UseUrls("http://localhost:5001")
                 .UseStartup<Startup>()
                 .Build();
     }

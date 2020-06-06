@@ -1,29 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../ProjectBuildProperties.targets" />
 
   <PropertyGroup>
-    <Description>EasyDocDb storage provider for generic OData API implementation</Description>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <PackageTags>netstandard;.net core;odata;generic;easydocdb;storage</PackageTags>
-    <PackageReleaseNotes>Initial Release.</PackageReleaseNotes>
-    <PackageIconUrl>https://mocoding.blob.core.windows.net/resources/odata-api/nugetIcon.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/mocoding-software/odata-api</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/mocoding-software/odata-api/master/LICENSE</PackageLicenseUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/mocoding-software/odata-api</RepositoryUrl>
-    <CodeAnalysisRuleSet>..\..\_stylecop\StyleCop.ruleset</CodeAnalysisRuleSet>
-    <Authors>Mocoding</Authors>
-  </PropertyGroup>
+    <Description>EasyDocDb storage provider for generic OData API implementation</Description>  
+    <PackageTags>netstandard;.net core;odata;generic;easydocdb;storage</PackageTags>  
+  </PropertyGroup>  
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Mocoding.EasyDocDb" Version="2.3.0" />
-    <PackageReference Include="StyleCop.Analyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <Version>1.1.118</Version>
-    </PackageReference>
+    <PackageReference Include="Mocoding.EasyDocDb" Version="2.3.0" />    
   </ItemGroup>
 
 
