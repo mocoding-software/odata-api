@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
     <PropertyGroup>
-        <SkipCodeCoverageReport Condition="$(SkipCodeCoverageReport) == ''">false</SkipCodeCoverageReport>
+        <SkipCodeCoverageReport Condition="$(SkipCodeCoverageReport) == ''">false</SkipCodeCoverageReport>        
         <CoverletOutputFormat>cobertura,opencover</CoverletOutputFormat>
+        <Include>[*.ODataApi]*,[*.ODataApi.*]*</Include> <!-- [Assembly-Filter]Type-Filter -->
         <CollectCoverage>true</CollectCoverage>
         <ThresholdType>line</ThresholdType>
         <ThresholdStat>total</ThresholdStat>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocoding.AspNetCore.ODataApi", "src\Mocoding.AspNetCore.ODataApi\Mocoding.AspNetCore.ODataApi.csproj", "{B774558F-8838-40DD-8F84-A7A4DADE101C}"
 EndProject
@@ -18,6 +18,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.EF", "examples\WebApp.EF\WebApp.EF.csproj", "{9E6E3B2A-DC16-4FA4-91BD-116E0C785105}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocoding.AspNetCore.ODataApi.EntityFramework", "src\Mocoding.AspNetCore.ODataApi.EntityFramework\Mocoding.AspNetCore.ODataApi.EntityFramework.csproj", "{E3D3F709-1870-47A9-AAEF-68997069875A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DC1FB735-A291-4053-8CE9-85D7D2AE7BC8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocoding.AspNetCore.ODataApi.Tests", "test\Mocoding.AspNetCore.ODataApi.Tests\Mocoding.AspNetCore.ODataApi.Tests.csproj", "{0528A4FF-4821-48AC-8E2E-AC20C1069A41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +53,10 @@ Global
 		{E3D3F709-1870-47A9-AAEF-68997069875A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3D3F709-1870-47A9-AAEF-68997069875A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3D3F709-1870-47A9-AAEF-68997069875A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0528A4FF-4821-48AC-8E2E-AC20C1069A41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0528A4FF-4821-48AC-8E2E-AC20C1069A41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0528A4FF-4821-48AC-8E2E-AC20C1069A41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0528A4FF-4821-48AC-8E2E-AC20C1069A41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +68,7 @@ Global
 		{4F1D93E0-06F1-4E8C-A453-EAB560C6BFD0} = {5F194EF3-90C7-42E7-9A73-9B009F37ED0E}
 		{9E6E3B2A-DC16-4FA4-91BD-116E0C785105} = {314FF1B1-D032-485D-BA24-37B31EC48886}
 		{E3D3F709-1870-47A9-AAEF-68997069875A} = {5F194EF3-90C7-42E7-9A73-9B009F37ED0E}
+		{0528A4FF-4821-48AC-8E2E-AC20C1069A41} = {DC1FB735-A291-4053-8CE9-85D7D2AE7BC8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E92994F3-765D-4ACA-9961-F4A8CCF52A6B}
