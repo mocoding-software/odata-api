@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Options;
@@ -9,6 +10,9 @@ using Mocoding.EasyDocDb;
 
 namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
 {
+    /// <summary>
+    /// Factory that is responsible to create instances of EasyDocDb generic repositories.
+    /// </summary>
     public class DocumentRepositoryFactory
     {
         private readonly IEntityKeyAccessor _keyAccessor;
@@ -17,6 +21,13 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
         private readonly IDocumentSerializer _serializer;
         private readonly IDictionary<Type, object> _crudRepositories;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DocumentRepositoryFactory"/> class.
+        /// </summary>
+        /// <param name="keyAccessor">The key accessor.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="repository">The repository.</param>
+        /// <param name="serializer">The serializer.</param>
         public DocumentRepositoryFactory(IEntityKeyAccessor keyAccessor, IOptions<ODataEasyDocDbOptions> options, IRepository repository, IDocumentSerializer serializer)
         {
             _keyAccessor = keyAccessor;
@@ -42,6 +53,14 @@ namespace Mocoding.AspNetCore.ODataApi.EasyDocDb
             _crudRepositories.Add(t, repo);
 
             return repo;
+        }
+
+        /// <summary>
+        /// Allows clearing the cache of registered generic repositories, forces to re-init them.
+        /// </summary>
+        public void Refresh()
+        {
+            _crudRepositories.Clear();
         }
     }
 }
