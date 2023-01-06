@@ -10,7 +10,7 @@
     <PackageReference Include="Mocoding.EasyDocDb.FileSystem" Version="2.3.0" />
     <PackageReference Include="Mocoding.EasyDocDb.Json" Version="2.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.4.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.4.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.4.0" />
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
       <PrivateAssets>all</PrivateAssets>
